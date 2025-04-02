@@ -23,12 +23,52 @@
   <script src="{{ 'quick-order-list.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 
+<script>
+  // Script para el cambio automático de imágenes
+  document.addEventListener('DOMContentLoaded', function() {
+    const productCards = document.querySelectorAll('.granito-product-card');
+    
+    productCards.forEach(card => {
+      const imageContainer = card.querySelector('.granito-image-container');
+      if (!imageContainer) return;
+      
+      const images = imageContainer.querySelectorAll('.granito-product-image');
+      if (images.length <= 1) return;
+      
+      let currentIndex = 0;
+      
+      // Función para cambiar a la siguiente imagen
+      function nextImage() {
+        images[currentIndex].classList.add('hidden');
+        currentIndex = (currentIndex + 1) % images.length;
+        images[currentIndex].classList.remove('hidden');
+      }
+      
+      // Iniciar el carrusel solo si hay más de una imagen
+      if (images.length > 1) {
+        // Ocultar todas las imágenes excepto la primera
+        for (let i = 1; i < images.length; i++) {
+          images[i].classList.add('hidden');
+        }
+        
+        // Cambiar imagen cada X segundos (configurable desde el panel)
+        const interval = parseInt(card.dataset.interval) || 3000;
+        setInterval(nextImage, interval);
+      }
+    });
+  });
+</script>
+
 {%- style -%}
   /* Estilos personalizados para GRANITO SKATEBOARDING */
   :root {
-    --granito-gold: #C9A227;
-    --granito-black: #333333;
-    --granito-white: #FFFFFF;
+    --granito-gold: {{ section.settings.primary_color }};
+    --granito-black: {{ section.settings.secondary_color }};
+    --granito-white: {{ section.settings.background_color }};
+    --granito-card-radius: {{ section.settings.card_radius }}px;
+    --granito-card-shadow: {{ section.settings.card_shadow_intensity }}px {{ section.settings.card_shadow_intensity | times: 1.5 }}px {{ section.settings.card_shadow_intensity | times: 2 }}px rgba(0, 0, 0, 0.1);
+    --granito-card-spacing: {{ section.settings.card_spacing }}px;
+    --granito-animation-speed: {{ section.settings.animation_speed }}ms;
   }
 
   .section-{{ section.id }}-padding {
@@ -64,7 +104,7 @@
     color: var(--granito-black);
     font-weight: 600;
     border: none;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--granito-animation-speed) ease;
   }
 
   .granito-collection .button:hover {
@@ -99,29 +139,158 @@
     color: var(--granito-gold);
   }
 
-  .granito-collection .card__heading a {
-    color: var(--granito-black);
+  /* Estilos mejorados para las tarjetas de producto */
+  .granito-collection .grid__item {
+    padding: var(--granito-card-spacing);
   }
 
-  .granito-collection .card__heading a:hover {
+  .granito-product-card {
+    position: relative;
+    border-radius: var(--granito-card-radius);
+    box-shadow: var(--granito-card-shadow);
+    overflow: hidden;
+    transition: transform var(--granito-animation-speed) ease, 
+                box-shadow var(--granito-animation-speed) ease;
+    background-color: var(--granito-white);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .granito-product-card:hover {
+    transform: translateY(-{{ section.settings.card_hover_lift }}px);
+    box-shadow: 0 {{ section.settings.card_shadow_intensity | times: 2 }}px {{ section.settings.card_shadow_intensity | times: 3 }}px rgba(0, 0, 0, 0.15);
+  }
+
+  .granito-image-container {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 100%; /* Relación de aspecto 1:1 por defecto */
+  }
+
+  .granito-image-container.portrait {
+    padding-bottom: 125%; /* Relación de aspecto 4:5 */
+  }
+
+  .granito-image-container.adapt {
+    padding-bottom: 0;
+  }
+
+  .granito-product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity var(--granito-animation-speed) ease;
+  }
+
+  .granito-product-image.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .granito-product-image.hover-image {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .granito-product-card:hover .granito-product-image.hover-image {
+    opacity: 1;
+  }
+
+  .granito-product-card:hover .granito-product-image.main-image {
+    opacity: 0;
+  }
+
+  .granito-product-info {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .granito-product-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--granito-black);
+    transition: color var(--granito-animation-speed) ease;
+  }
+
+  .granito-product-card:hover .granito-product-title {
     color: var(--granito-gold);
   }
 
-  /* Estilo para el borde de las tarjetas de producto */
-  .granito-collection .card {
-    border: 1px solid rgba(201, 162, 39, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  .granito-product-price {
+    font-weight: 700;
+    margin-top: auto;
+    color: var(--granito-black);
   }
 
-  .granito-collection .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  .granito-product-vendor {
+    font-size: 0.85em;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 8px;
   }
 
-  /* Estilo para el botón de vista rápida */
+  /* Animación de entrada para las tarjetas */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .granito-collection .grid__item {
+    animation: fadeInUp var(--granito-animation-speed) ease forwards;
+    animation-delay: calc(var(--animation-order) * 100ms);
+    opacity: 0;
+  }
+
+  /* Estilos para el botón de vista rápida */
   .granito-collection .quick-add__submit {
     background-color: var(--granito-gold);
     color: var(--granito-black);
+    border-radius: var(--granito-card-radius);
+    transition: background-color var(--granito-animation-speed) ease;
+  }
+
+  .granito-collection .quick-add__submit:hover {
+    background-color: var(--granito-black);
+    color: var(--granito-white);
+  }
+
+  /* Etiqueta de oferta */
+  .granito-sale-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--granito-gold);
+    color: var(--granito-black);
+    padding: 5px 10px;
+    border-radius: var(--granito-card-radius);
+    font-weight: 600;
+    font-size: 0.85em;
+    z-index: 2;
+  }
+
+  /* Etiqueta de agotado */
+  .granito-sold-out-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--granito-black);
+    color: var(--granito-white);
+    padding: 5px 10px;
+    border-radius: var(--granito-card-radius);
+    font-weight: 600;
+    font-size: 0.85em;
+    z-index: 2;
   }
 {%- endstyle -%}
 
@@ -179,42 +348,137 @@
         role="list"
         aria-label="{{ 'general.slider.name' | t }}"
       >
-        {% assign skip_card_product_styles = false %}
-
         {%- if section.settings.collection.products.size > 0 -%}
           {% paginate section.settings.collection.products by section.settings.products_to_show %}
             {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
               <li
                 id="Slide-{{ section.id }}-{{ forloop.index }}"
-                class="grid__item{% if show_mobile_slider or show_desktop_slider %} slider__slide{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-                {% if settings.animations_reveal_on_scroll %}
-                  data-cascade
-                  style="--animation-order: {{ forloop.index }};"
-                {% endif %}
+                class="grid__item{% if show_mobile_slider or show_desktop_slider %} slider__slide{% endif %}"
+                style="--animation-order: {{ forloop.index }};"
               >
-                {% render 'card-product',
-                  card_product: product,
-                  media_aspect_ratio: section.settings.image_ratio,
-                  image_shape: section.settings.image_shape,
-                  show_secondary_image: section.settings.show_secondary_image,
-                  show_vendor: section.settings.show_vendor,
-                  show_rating: section.settings.show_rating,
-                  skip_styles: skip_card_product_styles,
-                  section_id: section.id,
-                  quick_add: section.settings.quick_add
-                %}
+                {% comment %} Tarjeta de producto personalizada GRANITO {% endcomment %}
+                <div class="granito-product-card" data-interval="{{ section.settings.image_rotation_speed | times: 1000 }}">
+                  {% if product.compare_at_price > product.price and section.settings.show_sale_badge %}
+                    <div class="granito-sale-badge">{{ 'products.product.on_sale' | t }}</div>
+                  {% endif %}
+                  
+                  {% if product.available == false and section.settings.show_sold_out_badge %}
+                    <div class="granito-sold-out-badge">{{ 'products.product.sold_out' | t }}</div>
+                  {% endif %}
+                  
+                  <a href="{{ product.url }}" class="granito-product-link">
+                    <div class="granito-image-container {% if section.settings.image_ratio == 'portrait' %}portrait{% elsif section.settings.image_ratio == 'adapt' %}adapt{% endif %}">
+                      {% if product.featured_image != blank %}
+                        <img 
+                          src="{{ product.featured_image | img_url: '500x' }}" 
+                          alt="{{ product.featured_image.alt | escape }}"
+                          class="granito-product-image main-image"
+                          loading="lazy"
+                          width="500"
+                          height="500"
+                        >
+                      {% else %}
+                        {{ 'product-1' | placeholder_svg_tag: 'granito-product-image main-image' }}
+                      {% endif %}
+                      
+                      {% comment %} Imagen para hover si está configurada {% endcomment %}
+                      {% if product.images.size > 1 and section.settings.show_hover_image %}
+                        <img 
+                          src="{{ product.images[1] | img_url: '500x' }}" 
+                          alt="{{ product.images[1].alt | escape }}"
+                          class="granito-product-image hover-image"
+                          loading="lazy"
+                          width="500"
+                          height="500"
+                        >
+                      {% endif %}
+                      
+                      {% comment %} Imágenes adicionales para rotación automática {% endcomment %}
+                      {% if section.settings.show_image_rotation and product.images.size > 1 %}
+                        {% for image in product.images offset: 1 limit: section.settings.max_rotation_images %}
+                          {% unless forloop.index == 1 and section.settings.show_hover_image %}
+                            <img 
+                              src="{{ image | img_url: '500x' }}" 
+                              alt="{{ image.alt | escape }}"
+                              class="granito-product-image hidden"
+                              loading="lazy"
+                              width="500"
+                              height="500"
+                            >
+                          {% endunless %}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                    
+                    <div class="granito-product-info">
+                      {% if section.settings.show_vendor and product.vendor != blank %}
+                        <div class="granito-product-vendor">{{ product.vendor }}</div>
+                      {% endif %}
+                      
+                      <h3 class="granito-product-title">{{ product.title }}</h3>
+                      
+                      <div class="granito-product-price">
+                        {% if product.compare_at_price > product.price %}
+                          <span class="granito-price-sale">{{ product.price | money }}</span>
+                          <span class="granito-price-compare">{{ product.compare_at_price | money }}</span>
+                        {% else %}
+                          <span>{{ product.price | money }}</span>
+                        {% endif %}
+                      </div>
+                      
+                      {% if section.settings.show_rating and product.metafields.reviews.rating.value != blank %}
+                        <div class="granito-product-rating">
+                          {% assign rating_decimal = 0 %}
+                          {% assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1 %}
+                          {% if decimal >= 0.3 and decimal <= 0.7 %}
+                            {% assign rating_decimal = 0.5 %}
+                          {% elsif decimal > 0.7 %}
+                            {% assign rating_decimal = 1 %}
+                          {% endif %}
+                          <div class="rating" role="img" aria-label="{{ 'products.product.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
+                            {%- for i in (1..5) -%}
+                              {%- assign rating_value = product.metafields.reviews.rating.value.rating | floor -%}
+                              <span class="rating-star {% if i <= rating_value %}filled{% endif %} {% if i <= rating_value and decimal > 0 and i == rating_value %}half{% endif %}">★</span>
+                            {%- endfor -%}
+                          </div>
+                          <p class="rating-text">
+                            <span>{{ product.metafields.reviews.rating.value }} / {{ product.metafields.reviews.rating.value.scale_max }}</span>
+                          </p>
+                          <p class="rating-count">
+                            <span>({{ product.metafields.reviews.rating_count.value }} {{ 'products.product.reviews' | t }})</span>
+                          </p>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </a>
+                  
+                  {% if section.settings.quick_add != 'none' %}
+                    <div class="granito-quick-add">
+                      {%- if product.variants.size == 1 -%}
+                        <product-form>
+                          <form method="post" action="{{ routes.cart_add_url }}" id="quick-add-{{ product.id }}" accept-charset="UTF-8" class="form" enctype="multipart/form-data" novalidate="novalidate">
+                            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                            <button type="submit" name="add" class="granito-quick-add-button">
+                              {{ 'products.product.add_to_cart' | t }}
+                            </button>
+                          </form>
+                        </product-form>
+                      {%- else -%}
+                        <a href="{{ product.url }}" class="granito-view-product-button">
+                          {{ 'products.product.view_details' | t }}
+                        </a>
+                      {%- endif -%}
+                    </div>
+                  {% endif %}
+                </div>
               </li>
-              {%- assign skip_card_product_styles = true -%}
             {%- endfor -%}
           {% endpaginate %}
         {%- else -%}
           {%- for i in (1..section.settings.columns_desktop) -%}
             <li
-              class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-              {% if settings.animations_reveal_on_scroll %}
-                data-cascade
-                style="--animation-order: {{ forloop.index }};"
-              {% endif %}
+              class="grid__item"
+              style="--animation-order: {{ forloop.index }};"
             >
               {% liquid
                 assign ridx = forloop.rindex
@@ -225,13 +489,15 @@
                     assign ridx = 2
                 endcase
               %}
-              {%- assign placeholder_image = 'product-apparel-' | append: ridx -%}
-              {% render 'card-product',
-                show_vendor: section.settings.show_vendor,
-                media_aspect_ratio: section.settings.image_ratio,
-                image_shape: section.settings.image_shape,
-                placeholder_image: placeholder_image
-              %}
+              <div class="granito-product-card">
+                <div class="granito-image-container">
+                  {{ 'product-' | append: ridx | placeholder_svg_tag: 'granito-product-image main-image' }}
+                </div>
+                <div class="granito-product-info">
+                  <h3 class="granito-product-title">{{ 'products.product.product_title' | t }}</h3>
+                  <div class="granito-product-price">{{ '29.99' | money }}</div>
+                </div>
+              </div>
             </li>
           {%- endfor -%}
         {%- endif -%}
@@ -271,7 +537,7 @@
     </slider-component>
 
     {%- if section.settings.show_view_all and more_in_collection -%}
-      <div class="center collection__view-all{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+      <div class="center collection__view-all">
         <a
           href="{{ section.settings.collection.url }}"
           class="{% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}"
@@ -299,7 +565,7 @@
     {
       "type": "collection",
       "id": "collection",
-      "label": "t:sections.featured-collection.settings.collection.label"
+      "label": "Colección"
     },
     {
       "type": "range",
@@ -308,17 +574,134 @@
       "max": 25,
       "step": 1,
       "default": 4,
-      "label": "t:sections.featured-collection.settings.products_to_show.label"
-    },     
+      "label": "Productos a mostrar"
+    },
     {
       "type": "header",
-      "content": "t:sections.featured-collection.settings.header_text.content"
+      "content": "Colores y Estilos"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Color primario (dorado)",
+      "default": "#C9A227"
+    },
+    {
+      "type": "color",
+      "id": "secondary_color",
+      "label": "Color secundario (negro)",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Estilo de Tarjetas"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 8,
+      "label": "Radio de bordes de tarjeta"
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_intensity",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 5,
+      "label": "Intensidad de sombra"
+    },
+    {
+      "type": "range",
+      "id": "card_spacing",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "default": 20,
+      "label": "Espaciado entre tarjetas"
+    },
+    {
+      "type": "range",
+      "id": "card_hover_lift",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 5,
+      "label": "Elevación al pasar el cursor"
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "min": 200,
+      "max": 1000,
+      "step": 50,
+      "default": 300,
+      "label": "Velocidad de animación (ms)"
+    },
+    {
+      "type": "header",
+      "content": "Imágenes de Producto"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hover_image",
+      "default": true,
+      "label": "Mostrar imagen al pasar el cursor"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_rotation",
+      "default": true,
+      "label": "Activar rotación automática de imágenes"
+    },
+    {
+      "type": "range",
+      "id": "image_rotation_speed",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3,
+      "label": "Velocidad de rotación (segundos)"
+    },
+    {
+      "type": "range",
+      "id": "max_rotation_images",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "label": "Máximo de imágenes en rotación"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sale_badge",
+      "default": true,
+      "label": "Mostrar etiqueta de oferta"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sold_out_badge",
+      "default": true,
+      "label": "Mostrar etiqueta de agotado"
+    },
+    {
+      "type": "header",
+      "content": "Texto y Encabezados"
     },   
     {
       "type": "inline_richtext",
       "id": "title",
       "default": "Colección GRANITO",
-      "label": "t:sections.featured-collection.settings.title.label"
+      "label": "Título"
     },
     {
       "type": "select",
@@ -326,62 +709,62 @@
       "options": [
         {
           "value": "h2",
-          "label": "t:sections.all.heading_size.options__1.label"
+          "label": "Pequeño"
         },
         {
           "value": "h1",
-          "label": "t:sections.all.heading_size.options__2.label"
+          "label": "Mediano"
         },
         {
           "value": "h0",
-          "label": "t:sections.all.heading_size.options__3.label"
+          "label": "Grande"
         },
         {
           "value": "hxl",
-          "label": "t:sections.all.heading_size.options__4.label"
+          "label": "Extra grande"
         },
         {
           "value": "hxxl",
-          "label": "t:sections.all.heading_size.options__5.label"
+          "label": "Extra extra grande"
         }
       ],
       "default": "h1",
-      "label": "t:sections.all.heading_size.label"
+      "label": "Tamaño del título"
     },
     {
       "type": "richtext",
       "id": "description",
-      "label": "t:sections.featured-collection.settings.description.label"
+      "label": "Descripción"
     },
     {
       "type": "checkbox",
       "id": "show_description",
-      "label": "t:sections.featured-collection.settings.show_description.label",
+      "label": "Mostrar descripción de la colección",
       "default": false   
     },
     {
       "type": "select",
       "id": "description_style",
-      "label": "t:sections.featured-collection.settings.description_style.label",
+      "label": "Estilo de descripción",
       "options": [
         {
           "value": "body",
-          "label": "t:sections.featured-collection.settings.description_style.options__1.label"
+          "label": "Normal"
         },
         {
           "value": "subtitle",
-          "label": "t:sections.featured-collection.settings.description_style.options__2.label"
+          "label": "Subtítulo"
         },
         {
           "value": "uppercase",
-          "label": "t:sections.featured-collection.settings.description_style.options__3.label"
+          "label": "Mayúsculas"
         }
       ],
       "default": "body"
     },
     {
       "type": "header",
-      "content": "t:sections.featured-collection.settings.header_collection.content"
+      "content": "Diseño de Colección"
     },    
     {
       "type": "range",
@@ -390,77 +773,66 @@
       "max": 6,
       "step": 1,
       "default": 4,
-      "label": "t:sections.featured-collection.settings.columns_desktop.label"
+      "label": "Columnas en escritorio"
     },
-        {
+    {
       "type": "checkbox",
       "id": "enable_desktop_slider",
-      "label": "t:sections.featured-collection.settings.enable_desktop_slider.label",
+      "label": "Habilitar slider en escritorio",
       "default": false
     },
     {
       "type": "checkbox",
       "id": "full_width",
-      "label": "t:sections.featured-collection.settings.full_width.label",
+      "label": "Ancho completo",
       "default": false
     },
     {
       "type": "checkbox",
       "id": "show_view_all",
       "default": true,
-      "label": "t:sections.featured-collection.settings.show_view_all.label",
-      "info": "t:sections.featured-collection.settings.show_view_all.info"
+      "label": "Mostrar 'Ver todo'",
+      "info": "Muestra un botón cuando hay más productos en la colección"
     },
     {
       "type": "select",
       "id": "view_all_style",
-      "label": "t:sections.featured-collection.settings.view_all_style.label",
+      "label": "Estilo de 'Ver todo'",
       "options": [
         {
           "value": "link",
-          "label": "t:sections.featured-collection.settings.view_all_style.options__1.label"
+          "label": "Enlace"
         },
         {
           "value": "outline",
-          "label": "t:sections.featured-collection.settings.view_all_style.options__2.label"
+          "label": "Botón con contorno"
         },
         {
           "value": "solid",
-          "label": "t:sections.featured-collection.settings.view_all_style.options__3.label"
+          "label": "Botón sólido"
         }
       ],
       "default": "solid"
     }, 
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:sections.all.colors.label",
-      "info": "t:sections.all.colors.has_cards_info",
-      "default": "scheme-1"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.featured-collection.settings.header.content"
-    },
     {
       "type": "select",
       "id": "image_ratio",
       "options": [
         {
           "value": "adapt",
-          "label": "t:sections.featured-collection.settings.image_ratio.options__1.label"
+          "label": "Adaptable"
         },
         {
           "value": "portrait",
-          "label": "t:sections.featured-collection.settings.image_ratio.options__2.label"
+          "label": "Retrato"
         },
         {
           "value": "square",
-          "label": "t:sections.featured-collection.settings.image_ratio.options__3.label"
+          "label": "Cuadrado"
         }
       ],
-      "default": "adapt",
-      "label": "t:sections.featured-collection.settings.image_ratio.label"
+      "default": "square",
+      "label": "Proporción de imagen"
     },
     {
       "type": "select",
@@ -468,96 +840,96 @@
       "options": [
         {
           "value": "default",
-          "label": "t:sections.all.image_shape.options__1.label"
+          "label": "Predeterminado"
         },
         {
           "value": "arch",
-          "label": "t:sections.all.image_shape.options__2.label"
+          "label": "Arco"
         },
         {
           "value": "blob",
-          "label": "t:sections.all.image_shape.options__3.label"
+          "label": "Forma orgánica"
         },
         {
           "value": "chevronleft",
-          "label": "t:sections.all.image_shape.options__4.label"
+          "label": "Chevron izquierdo"
         },
         {
           "value": "chevronright",
-          "label": "t:sections.all.image_shape.options__5.label"
+          "label": "Chevron derecho"
         },
         {
           "value": "diamond",
-          "label": "t:sections.all.image_shape.options__6.label"
+          "label": "Diamante"
         },
         {
           "value": "parallelogram",
-          "label": "t:sections.all.image_shape.options__7.label"
+          "label": "Paralelogramo"
         },
         {
           "value": "round",
-          "label": "t:sections.all.image_shape.options__8.label"
+          "label": "Redondo"
         }
       ],
       "default": "default",
-      "label": "t:sections.all.image_shape.label"
+      "label": "Forma de imagen"
     },
     {
       "type": "checkbox",
       "id": "show_secondary_image",
       "default": false,
-      "label": "t:sections.featured-collection.settings.show_secondary_image.label"
+      "label": "Mostrar imagen secundaria al pasar el cursor"
     },
     {
       "type": "checkbox",
       "id": "show_vendor",
       "default": false,
-      "label": "t:sections.featured-collection.settings.show_vendor.label"
+      "label": "Mostrar proveedor"
     },
     {
       "type": "checkbox",
       "id": "show_rating",
       "default": false,
-      "label": "t:sections.featured-collection.settings.show_rating.label",
-      "info": "t:sections.featured-collection.settings.show_rating.info"
+      "label": "Mostrar calificación del producto",
+      "info": "Para mostrar la calificación, añade una app de reseñas"
     },
     {
       "type": "select",
       "id": "quick_add",
       "default": "none",
-      "label": "t:sections.main-collection-product-grid.settings.quick_add.label",
+      "label": "Añadir rápido",
       "options": [
         {
           "value": "none",
-          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_1"
+          "label": "Ninguno"
         },
         {
           "value": "standard",
-          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_2"
+          "label": "Estándar"
         },
         {
           "value": "bulk",
-          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3"
+          "label": "Masivo"
         }
       ]
     },
     {
       "type": "header",
-      "content": "t:sections.featured-collection.settings.header_mobile.content"
+      "content": "Móvil"
     },
     {
       "type": "select",
       "id": "columns_mobile",
       "default": "2",
-      "label": "t:sections.featured-collection.settings.columns_mobile.label",
+      "label": "Columnas en móvil",
       "options": [
         {
           "value": "1",
-          "label": "t:sections.featured-collection.settings.columns_mobile.options__1.label"
+          "label": "1 columna"
         },
         {
           "value": "2",
-          "label": "t:sections.featured-collection.settings.columns_mobile.options__2.label"
+          "label": "2 columnas"
         }
       ]
     },    
@@ -565,11 +937,11 @@
       "type": "checkbox",
       "id": "swipe_on_mobile",
       "default": false,
-      "label": "t:sections.featured-collection.settings.swipe_on_mobile.label"
+      "label": "Habilitar deslizamiento en móvil"
     },          
     {
       "type": "header",
-      "content": "t:sections.all.padding.section_padding_heading"
+      "content": "Espaciado"
     },
     {
       "type": "range",
@@ -578,7 +950,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "label": "t:sections.all.padding.padding_top",
+      "label": "Espaciado superior",
       "default": 36
     },
     {
@@ -588,7 +960,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "label": "t:sections.all.padding.padding_bottom",
+      "label": "Espaciado inferior",
       "default": 36
     }
   ],
