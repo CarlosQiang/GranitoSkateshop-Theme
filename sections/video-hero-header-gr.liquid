@@ -4,11 +4,7 @@
       <video autoplay muted loop playsinline id="header-video">
         <source src="{{ section.settings.video_url }}" type="video/mp4">
         {% if section.settings.fallback_image != blank %}
-          {{
-            section.settings.fallback_image
-            | image_url: width: 1920
-            | image_tag: loading: 'lazy', class: 'fallback-image', alt: section.settings.heading
-          }}
+          {{ section.settings.fallback_image | image_url: width: 1920 | image_tag: loading: 'lazy', class: 'fallback-image', alt: section.settings.heading }}
         {% endif %}
       </video>
     </div>
@@ -17,63 +13,31 @@
       <div class="carousel-container">
         {% for block in section.blocks %}
           {% if block.type == 'slide' and block.settings.image != blank %}
-            {% assign loading_value = 'lazy' %}
-            {% if forloop.first %}
-              {% assign loading_value = 'eager' %}
-            {% endif %}
-            <div
-              class="carousel-slide {% if forloop.first %}active{% endif %}"
-              data-slide-index="{{ forloop.index0 }}"
-              {{ block.shopify_attributes }}
-            >
-              {{ block.settings.image | image_url: width: 1920 | image_tag: loading: loading_value, class: 'carousel-image', alt: block.settings.image.alt | default: section.settings.heading }}
+            <div class="carousel-slide {% if forloop.first %}active{% endif %}" data-slide-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              {{ block.settings.image | image_url: width: 1920 | image_tag: loading: forloop.first ? 'eager' : 'lazy', class: 'carousel-image', alt: block.settings.image.alt | default: section.settings.heading }}
             </div>
           {% endif %}
         {% endfor %}
       </div>
-
+      
       {% if section.settings.show_carousel_indicators and section.blocks.size > 1 %}
         <div class="carousel-indicators">
           {% for block in section.blocks %}
             {% if block.type == 'slide' and block.settings.image != blank %}
-              <button
-                class="carousel-indicator {% if forloop.first %}active{% endif %}"
-                data-slide-to="{{ forloop.index0 }}"
-                aria-label="Slide {{ forloop.index }}"
-              ></button>
+              <button class="carousel-indicator {% if forloop.first %}active{% endif %}" data-slide-to="{{ forloop.index0 }}" aria-label="Slide {{ forloop.index }}"></button>
             {% endif %}
           {% endfor %}
         </div>
       {% endif %}
-
+      
       {% if section.settings.show_carousel_controls and section.blocks.size > 1 %}
         <button class="carousel-control carousel-control-prev" aria-label="Anterior">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
         </button>
         <button class="carousel-control carousel-control-next" aria-label="Siguiente">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </button>
@@ -81,33 +45,16 @@
     </div>
   {% elsif section.settings.fallback_image != blank %}
     <div class="image-background">
-      {{
-        section.settings.fallback_image
-        | image_url: width: 1920
-        | image_tag: loading: 'lazy', class: 'fallback-image', alt: section.settings.heading
-      }}
+      {{ section.settings.fallback_image | image_url: width: 1920 | image_tag: loading: 'lazy', class: 'fallback-image', alt: section.settings.heading }}
     </div>
   {% endif %}
 
-  <div
-    class="overlay"
-    style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; background-color: {{ section.settings.overlay_color }}"
-  ></div>
+  <div class="overlay" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; background-color: {{ section.settings.overlay_color }}"></div>
 
   <div class="transparent-navbar">
     <div class="navbar-container page-width">
       <button class="mobile-menu-button" aria-label="Abrir menú" aria-expanded="false">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="12" x2="21" y2="12"></line>
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -128,7 +75,7 @@
           </a>
         {% endif %}
       </div>
-
+      
       <div class="navbar-center">
         <nav class="header-navigation">
           <ul class="nav-links">
@@ -142,42 +89,22 @@
           </ul>
         </nav>
       </div>
-
+      
       <div class="navbar-right">
         <div class="search-container">
           <form action="/search" method="get" class="search-form">
             <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" class="search-input">
             <button type="submit" class="search-button">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
             </button>
           </form>
         </div>
-
+        
         <a href="/cart" class="cart-link">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -190,17 +117,7 @@
   <div class="mobile-menu">
     <div class="mobile-menu-header">
       <button class="mobile-menu-close" aria-label="Cerrar menú">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -219,24 +136,9 @@
     </nav>
     <div class="mobile-menu-footer">
       <form action="/search" method="get" class="mobile-search-form">
-        <input
-          type="search"
-          name="q"
-          placeholder="{{ section.settings.search_placeholder }}"
-          class="mobile-search-input"
-        >
+        <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" class="mobile-search-input">
         <button type="submit" class="mobile-search-button">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
@@ -252,23 +154,13 @@
       {% if section.settings.subheading != blank %}
         <p class="hero-subtitle">{{ section.settings.subheading }}</p>
       {% endif %}
-
+      
       {% if section.settings.button_label != blank and section.settings.button_link != blank %}
         <div class="hero-button-container">
           <a href="{{ section.settings.button_link }}" class="hero-button">
             {{ section.settings.button_label }}
             {% if section.settings.button_style == 'arrow' %}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
@@ -278,17 +170,7 @@
       {% endif %}
       <div class="scroll-indicator">
         <span>Descubre más</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <polyline points="19 12 12 19 5 12"></polyline>
         </svg>
@@ -296,275 +178,6 @@
     </div>
   </div>
 </div>
-
-{% schema %}
-{
-  "name": "Video Hero Header",
-  "tag": "section",
-  "class": "section",
-  "settings": [
-    {
-      "type": "header",
-      "content": "Logo y Navegación"
-    },
-    {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Logo"
-    },
-    {
-      "type": "text",
-      "id": "site_name",
-      "label": "Nombre del sitio (si no hay logo)",
-      "default": "Mi Tienda"
-    },
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "Menú de navegación",
-      "default": "main-menu"
-    },
-    {
-      "type": "text",
-      "id": "search_placeholder",
-      "label": "Texto del buscador",
-      "default": "Buscar"
-    },
-    {
-      "type": "header",
-      "content": "Contenido del Hero"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Título principal",
-      "default": "Bienvenidos a nuestra tienda"
-    },
-    {
-      "type": "text",
-      "id": "subheading",
-      "label": "Subtítulo",
-      "default": "Encuentra los mejores productos para ti"
-    },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "Texto del botón"
-    },
-    {
-      "type": "url",
-      "id": "button_link",
-      "label": "Enlace del botón"
-    },
-    {
-      "type": "select",
-      "id": "button_style",
-      "label": "Estilo del botón",
-      "options": [
-        {
-          "value": "solid",
-          "label": "Sólido"
-        },
-        {
-          "value": "arrow",
-          "label": "Con flecha"
-        }
-      ],
-      "default": "arrow"
-    },
-    {
-      "type": "header",
-      "content": "Fondo"
-    },
-    {
-      "type": "select",
-      "id": "background_type",
-      "label": "Tipo de fondo",
-      "options": [
-        {
-          "value": "video",
-          "label": "Video"
-        },
-        {
-          "value": "carousel",
-          "label": "Carrusel de imágenes"
-        },
-        {
-          "value": "image",
-          "label": "Imagen única"
-        }
-      ],
-      "default": "video"
-    },
-    {
-      "type": "url",
-      "id": "video_url",
-      "label": "URL del video (formato MP4)",
-      "info": "Sube tu video a la sección de Archivos en Shopify y copia la URL aquí"
-    },
-    {
-      "type": "image_picker",
-      "id": "fallback_image",
-      "label": "Imagen de respaldo",
-      "info": "Se mostrará si el video no puede reproducirse o mientras se carga"
-    },
-    {
-      "type": "header",
-      "content": "Configuración del Carrusel"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_carousel_indicators",
-      "label": "Mostrar indicadores del carrusel",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_carousel_controls",
-      "label": "Mostrar controles del carrusel",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "carousel_speed",
-      "min": 3,
-      "max": 10,
-      "step": 1,
-      "unit": "s",
-      "label": "Velocidad de transición",
-      "default": 5,
-      "info": "Tiempo en segundos entre cada imagen"
-    },
-    {
-      "type": "select",
-      "id": "carousel_transition",
-      "label": "Efecto de transición",
-      "options": [
-        {
-          "value": "fade",
-          "label": "Desvanecer"
-        },
-        {
-          "value": "slide",
-          "label": "Deslizar"
-        }
-      ],
-      "default": "fade"
-    },
-    {
-      "type": "color",
-      "id": "overlay_color",
-      "label": "Color de superposición",
-      "default": "#000000"
-    },
-    {
-      "type": "range",
-      "id": "overlay_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Opacidad de superposición",
-      "default": 30
-    },
-    {
-      "type": "range",
-      "id": "header_height",
-      "min": 50,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Altura de la cabecera",
-      "default": 75,
-      "info": "Porcentaje de la altura de la pantalla que ocupará la cabecera"
-    },
-    {
-      "type": "header",
-      "content": "Colores"
-    },
-    {
-      "type": "color",
-      "id": "navbar_color",
-      "label": "Color de fondo de la barra de navegación",
-      "default": "#D4AF37"
-    },
-    {
-      "type": "range",
-      "id": "navbar_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Opacidad de la barra de navegación",
-      "default": 70
-    },
-    {
-      "type": "range",
-      "id": "navbar_scrolled_opacity",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Opacidad de la barra al hacer scroll",
-      "default": 90,
-      "info": "La barra se volverá más opaca al hacer scroll para mejorar la legibilidad"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Color del texto",
-      "default": "#FFFFFF"
-    },
-    {
-      "type": "color",
-      "id": "button_color",
-      "label": "Color del botón",
-      "default": "#D4AF37"
-    },
-    {
-      "type": "color",
-      "id": "button_text_color",
-      "label": "Color del texto del botón",
-      "default": "#FFFFFF"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "slide",
-      "name": "Imagen del carrusel",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Imagen"
-        },
-        {
-          "type": "text",
-          "id": "caption",
-          "label": "Leyenda (opcional)"
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Video Hero Header",
-      "category": "Header",
-      "blocks": [
-        {
-          "type": "slide"
-        },
-        {
-          "type": "slide"
-        },
-        {
-          "type": "slide"
-        }
-      ]
-    }
-  ]
-}
-{% endschema %}
 
 <style>
   .video-hero-header {
@@ -575,7 +188,7 @@
     overflow: hidden;
     color: {{ section.settings.text_color }};
   }
-
+  
   .video-background,
   .image-background,
   .carousel-background {
@@ -586,14 +199,14 @@
     height: 100%;
     z-index: 1;
   }
-
+  
   .video-background video,
   .image-background img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-
+  
   /* Estilos del carrusel */
   .carousel-container {
     position: relative;
@@ -601,7 +214,7 @@
     height: 100%;
     overflow: hidden;
   }
-
+  
   .carousel-slide {
     position: absolute;
     top: 0;
@@ -612,33 +225,33 @@
     transition: opacity 1s ease;
     z-index: 1;
   }
-
+  
   .carousel-slide.active {
     opacity: 1;
     z-index: 2;
   }
-
+  
   .carousel-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-
+  
   /* Transición de deslizamiento */
   .carousel-transition-slide .carousel-slide {
     transform: translateX(100%);
     opacity: 1;
     transition: transform 0.8s ease;
   }
-
+  
   .carousel-transition-slide .carousel-slide.active {
     transform: translateX(0);
   }
-
+  
   .carousel-transition-slide .carousel-slide.previous {
     transform: translateX(-100%);
   }
-
+  
   /* Controles del carrusel */
   .carousel-indicators {
     position: absolute;
@@ -649,7 +262,7 @@
     gap: 10px;
     z-index: 5;
   }
-
+  
   .carousel-indicator {
     width: 12px;
     height: 12px;
@@ -660,16 +273,16 @@
     padding: 0;
     transition: background-color 0.3s ease, transform 0.3s ease;
   }
-
+  
   .carousel-indicator.active {
     background-color: {{ section.settings.text_color }};
     transform: scale(1.2);
   }
-
+  
   .carousel-indicator:hover {
     background-color: rgba(255, 255, 255, 0.8);
   }
-
+  
   .carousel-control {
     position: absolute;
     top: 50%;
@@ -687,20 +300,20 @@
     z-index: 5;
     transition: background-color 0.3s ease, transform 0.3s ease;
   }
-
+  
   .carousel-control:hover {
     background-color: rgba(0, 0, 0, 0.5);
     transform: translateY(-50%) scale(1.1);
   }
-
+  
   .carousel-control-prev {
     left: 20px;
   }
-
+  
   .carousel-control-next {
     right: 20px;
   }
-
+  
   .overlay {
     position: absolute;
     top: 0;
@@ -709,7 +322,7 @@
     height: 100%;
     z-index: 2;
   }
-
+  
   .header-content {
     position: relative;
     z-index: 3;
@@ -717,7 +330,7 @@
     display: flex;
     flex-direction: column;
   }
-
+  
   .transparent-navbar {
     display: flex;
     justify-content: space-between;
@@ -733,7 +346,7 @@
     left: 0;
     z-index: 10;
   }
-
+  
   .navbar-container {
     display: flex;
     justify-content: space-between;
@@ -743,24 +356,24 @@
     margin: 0 auto;
     padding: 0 20px;
   }
-
+  
   .navbar-left,
   .navbar-center,
   .navbar-right {
     display: flex;
     align-items: center;
   }
-
+  
   .header-logo {
     max-height: 50px;
     width: auto;
     transition: transform 0.3s ease;
   }
-
+  
   .header-logo-link:hover .header-logo {
     transform: scale(1.05);
   }
-
+  
   .header-logo-text {
     font-size: 1.7rem;
     font-weight: bold;
@@ -769,22 +382,22 @@
     transition: opacity 0.3s ease;
     letter-spacing: 0.5px;
   }
-
+  
   .header-logo-text:hover {
     opacity: 0.8;
   }
-
+  
   .nav-links {
     display: flex;
     list-style: none;
     margin: 0;
     padding: 0;
   }
-
+  
   .nav-item {
     margin: 0 18px;
   }
-
+  
   .nav-link {
     color: {{ section.settings.text_color }};
     text-decoration: none;
@@ -795,7 +408,7 @@
     transition: all 0.3s ease;
     letter-spacing: 0.3px;
   }
-
+  
   .nav-link::after {
     content: '';
     position: absolute;
@@ -806,27 +419,27 @@
     background-color: {{ section.settings.text_color }};
     transition: width 0.3s ease;
   }
-
+  
   .nav-link:hover::after,
   .nav-link.active::after {
     width: 100%;
   }
-
+  
   .nav-link:hover {
     color: {{ section.settings.text_color }};
     opacity: 0.8;
     transform: translateY(-2px);
   }
-
+  
   .search-container {
     margin-right: 20px;
   }
-
+  
   .search-form {
     display: flex;
     align-items: center;
   }
-
+  
   .search-input {
     background-color: rgba(255, 255, 255, 0.2);
     border: none;
@@ -837,18 +450,18 @@
     transition: all 0.3s ease;
     font-size: 1rem;
   }
-
+  
   .search-input:focus {
     width: 200px;
     outline: none;
     background-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
   }
-
+  
   .search-input::placeholder {
     color: {{ section.settings.text_color | color_modify: 'alpha', 0.7 }};
   }
-
+  
   .search-button {
     background: transparent;
     border: none;
@@ -857,11 +470,11 @@
     margin-left: -30px;
     transition: transform 0.3s ease;
   }
-
+  
   .search-button:hover {
     transform: scale(1.1);
   }
-
+  
   .cart-link {
     position: relative;
     color: {{ section.settings.text_color }};
@@ -870,11 +483,11 @@
     align-items: center;
     transition: all 0.3s ease;
   }
-
+  
   .cart-link:hover {
     transform: scale(1.1);
   }
-
+  
   .cart-link:hover::after {
     content: 'Carrito';
     position: absolute;
@@ -887,7 +500,7 @@
     border-radius: 4px;
     white-space: nowrap;
   }
-
+  
   .cart-count {
     position: absolute;
     top: -8px;
@@ -903,11 +516,11 @@
     justify-content: center;
     transition: transform 0.3s ease;
   }
-
+  
   .cart-link:hover .cart-count {
     transform: scale(1.1);
   }
-
+  
   .hero-content {
     flex: 1;
     display: flex;
@@ -917,7 +530,7 @@
     text-align: center;
     padding: 0 20px;
   }
-
+  
   .hero-title {
     font-size: 4rem;
     font-weight: bold;
@@ -926,7 +539,7 @@
     letter-spacing: 1px;
     line-height: 1.2;
   }
-
+  
   .hero-subtitle {
     font-size: 1.7rem;
     margin-bottom: 35px;
@@ -934,7 +547,7 @@
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     line-height: 1.4;
   }
-
+  
   .hero-button {
     display: inline-flex;
     align-items: center;
@@ -948,67 +561,67 @@
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
   }
-
+  
   .hero-button svg {
     margin-left: 10px;
     transition: transform 0.3s ease;
   }
-
+  
   .hero-button:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
-
+  
   .hero-button:hover svg {
     transform: translateX(5px);
   }
-
+  
   @media screen and (max-width: 990px) {
     .navbar-center {
       display: none;
     }
-
+    
     .hero-title {
       font-size: 3rem;
     }
-
+    
     .hero-subtitle {
       font-size: 1.4rem;
     }
-
+    
     .carousel-control {
       width: 35px;
       height: 35px;
     }
   }
-
+  
   @media screen and (max-width: 767px) {
     .video-hero-header {
       height: 80vh;
       min-height: 500px;
     }
-
+    
     .search-container {
       display: none;
     }
-
+    
     .hero-title {
       font-size: 2.5rem;
     }
-
+    
     .hero-subtitle {
       font-size: 1.2rem;
     }
-
+    
     .header-logo-text {
       font-size: 1.5rem;
     }
-
+    
     .carousel-indicator {
       width: 10px;
       height: 10px;
     }
-
+    
     .carousel-control {
       width: 30px;
       height: 30px;
@@ -1029,18 +642,18 @@
     cursor: pointer;
     animation: bounce 2s infinite;
   }
-
+  
   .scroll-indicator:hover {
     opacity: 1;
     transform: translateX(-50%) translateY(-5px);
   }
-
+  
   .scroll-indicator span {
     margin-bottom: 5px;
     font-size: 1rem;
     font-weight: 500;
   }
-
+  
   @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {
       transform: translateX(-50%) translateY(0);
@@ -1204,19 +817,19 @@
     .mobile-menu-button {
       display: block;
     }
-
+    
     .navbar-center {
       display: none;
     }
-
+    
     .hero-title {
       font-size: 3rem;
     }
-
+    
     .hero-subtitle {
       font-size: 1.4rem;
     }
-
+    
     .carousel-control {
       width: 35px;
       height: 35px;
@@ -1238,30 +851,30 @@
         }
       });
     }
-
+    
     // Añadir clase activa al enlace de navegación actual
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll('.nav-link');
-
+    
     navLinks.forEach(link => {
       const linkPath = new URL(link.href).pathname;
       if (currentPath === linkPath || (currentPath.includes(linkPath) && linkPath !== '/')) {
         link.classList.add('active');
       }
     });
-
+    
     // Manejar el cambio de opacidad al hacer scroll
     const navbar = document.querySelector('.transparent-navbar');
     const initialOpacity = {{ section.settings.navbar_opacity | divided_by: 100.0 }};
     const scrolledOpacity = {{ section.settings.navbar_scrolled_opacity | divided_by: 100.0 }};
-
+    
     // Añadir padding al contenido para compensar la barra fija
     const headerContent = document.querySelector('.header-content');
     if (headerContent && navbar) {
       const navbarHeight = navbar.offsetHeight;
       headerContent.style.paddingTop = navbarHeight + 'px';
     }
-
+    
     function updateNavbarOpacity() {
       if (window.scrollY > 50) {
         navbar.style.backgroundColor = '{{ section.settings.navbar_color | color_modify: 'alpha', section.settings.navbar_scrolled_opacity | divided_by: 100.0 }}';
@@ -1275,10 +888,10 @@
         navbar.classList.remove('scrolled');
       }
     }
-
+    
     // Ejecutar al cargar la página para establecer el estado inicial
     updateNavbarOpacity();
-
+    
     // Añadir el evento de scroll
     window.addEventListener('scroll', updateNavbarOpacity);
 
@@ -1293,7 +906,7 @@
         });
       });
     }
-
+    
     // Configuración del carrusel
     const carouselContainer = document.querySelector('.carousel-container');
     if (carouselContainer) {
@@ -1303,15 +916,15 @@
       const nextButton = document.querySelector('.carousel-control-next');
       const transitionType = '{{ section.settings.carousel_transition }}';
       const carouselSpeed = {{ section.settings.carousel_speed }} * 1000;
-
+      
       let currentSlide = 0;
       let slideInterval;
-
+      
       // Aplicar el tipo de transición
       if (transitionType === 'slide') {
         carouselContainer.classList.add('carousel-transition-slide');
       }
-
+      
       // Función para mostrar un slide específico
       function showSlide(index) {
         // Ocultar todos los slides
@@ -1321,47 +934,47 @@
             slide.classList.add('previous');
           }
         });
-
+        
         // Desactivar todos los indicadores
         indicators.forEach(indicator => {
           indicator.classList.remove('active');
         });
-
+        
         // Mostrar el slide actual
         currentSlide = index;
         if (currentSlide >= slides.length) currentSlide = 0;
         if (currentSlide < 0) currentSlide = slides.length - 1;
-
+        
         slides[currentSlide].classList.add('active');
-
+        
         // Activar el indicador correspondiente
         if (indicators.length > 0) {
           indicators[currentSlide].classList.add('active');
         }
       }
-
+      
       // Función para avanzar al siguiente slide
       function nextSlide() {
         showSlide(currentSlide + 1);
       }
-
+      
       // Función para retroceder al slide anterior
       function prevSlide() {
         showSlide(currentSlide - 1);
       }
-
+      
       // Iniciar el carrusel automático
       function startCarousel() {
         if (slides.length > 1) {
           slideInterval = setInterval(nextSlide, carouselSpeed);
         }
       }
-
+      
       // Detener el carrusel automático
       function stopCarousel() {
         clearInterval(slideInterval);
       }
-
+      
       // Eventos para los controles del carrusel
       if (prevButton) {
         prevButton.addEventListener('click', function() {
@@ -1370,7 +983,7 @@
           startCarousel();
         });
       }
-
+      
       if (nextButton) {
         nextButton.addEventListener('click', function() {
           nextSlide();
@@ -1378,7 +991,7 @@
           startCarousel();
         });
       }
-
+      
       // Eventos para los indicadores
       indicators.forEach((indicator, index) => {
         indicator.addEventListener('click', function() {
@@ -1387,11 +1000,11 @@
           startCarousel();
         });
       });
-
+      
       // Pausar el carrusel al pasar el ratón por encima
       carouselContainer.addEventListener('mouseenter', stopCarousel);
       carouselContainer.addEventListener('mouseleave', startCarousel);
-
+      
       // Iniciar el carrusel
       startCarousel();
     }
@@ -1452,3 +1065,4 @@
     });
   });
 </script>
+
