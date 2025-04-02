@@ -14,7 +14,11 @@
         {% for block in section.blocks %}
           {% if block.type == 'slide' and block.settings.image != blank %}
             <div class="carousel-slide {% if forloop.first %}active{% endif %}" data-slide-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
-              {{ block.settings.image | image_url: width: 1920 | image_tag: loading: forloop.first ? 'eager' : 'lazy', class: 'carousel-image', alt: block.settings.image.alt | default: section.settings.heading }}
+              {% if forloop.first %}
+                {{ block.settings.image | image_url: width: 1920 | image_tag: loading: 'eager', class: 'carousel-image', alt: block.settings.image.alt | default: section.settings.heading }}
+              {% else %}
+                {{ block.settings.image | image_url: width: 1920 | image_tag: loading: 'lazy', class: 'carousel-image', alt: block.settings.image.alt | default: section.settings.heading }}
+              {% endif %}
             </div>
           {% endif %}
         {% endfor %}
@@ -114,7 +118,7 @@
       </div>
     </div>
   </div>
-  <div class="mobile-menu">
+  <div class="mobile-menu" style="background-color: {{ section.settings.mobile_menu_color | color_modify: 'alpha', section.settings.mobile_menu_opacity | divided_by: 100.0 }};">
     <div class="mobile-menu-header">
       <button class="mobile-menu-close" aria-label="Cerrar menú">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -127,7 +131,7 @@
       <ul class="mobile-nav-links">
         {% for link in section.settings.menu.links %}
           <li class="mobile-nav-item">
-            <a href="{{ link.url }}" class="mobile-nav-link {% if link.active %}active{% endif %}">
+            <a href="{{ link.url }}" class="mobile-nav-link {% if link.active %}active{% endif %}" style="opacity: {{ section.settings.mobile_text_opacity | divided_by: 100.0 }};">
               {{ link.title }}
             </a>
           </li>
@@ -136,8 +140,8 @@
     </nav>
     <div class="mobile-menu-footer">
       <form action="/search" method="get" class="mobile-search-form">
-        <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" class="mobile-search-input">
-        <button type="submit" class="mobile-search-button">
+        <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" class="mobile-search-input" style="opacity: {{ section.settings.mobile_text_opacity | divided_by: 100.0 }};">
+        <button type="submit" class="mobile-search-button" style="opacity: {{ section.settings.mobile_text_opacity | divided_by: 100.0 }};">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -178,6 +182,325 @@
     </div>
   </div>
 </div>
+
+{% schema %}
+{
+  "name": "Video Hero Header GR",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo y Navegación"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "site_name",
+      "label": "Nombre del sitio (si no hay logo)",
+      "default": "Mi Tienda"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menú de navegación",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Texto del buscador",
+      "default": "Buscar"
+    },
+    {
+      "type": "header",
+      "content": "Contenido del Hero"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título principal",
+      "default": "Bienvenidos a nuestra tienda"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subtítulo",
+      "default": "Encuentra los mejores productos para ti"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto del botón"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Estilo del botón",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Sólido"
+        },
+        {
+          "value": "arrow",
+          "label": "Con flecha"
+        }
+      ],
+      "default": "arrow"
+    },
+    {
+      "type": "header",
+      "content": "Fondo"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Tipo de fondo",
+      "options": [
+        {
+          "value": "video",
+          "label": "Video"
+        },
+        {
+          "value": "carousel",
+          "label": "Carrusel de imágenes"
+        },
+        {
+          "value": "image",
+          "label": "Imagen única"
+        }
+      ],
+      "default": "video"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "URL del video (formato MP4)",
+      "info": "Sube tu video a la sección de Archivos en Shopify y copia la URL aquí"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Imagen de respaldo",
+      "info": "Se mostrará si el video no puede reproducirse o mientras se carga"
+    },
+    {
+      "type": "header",
+      "content": "Configuración del Carrusel"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_carousel_indicators",
+      "label": "Mostrar indicadores del carrusel",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_carousel_controls",
+      "label": "Mostrar controles del carrusel",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "carousel_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Velocidad de transición",
+      "default": 5,
+      "info": "Tiempo en segundos entre cada imagen"
+    },
+    {
+      "type": "select",
+      "id": "carousel_transition",
+      "label": "Efecto de transición",
+      "options": [
+        {
+          "value": "fade",
+          "label": "Desvanecer"
+        },
+        {
+          "value": "slide",
+          "label": "Deslizar"
+        }
+      ],
+      "default": "fade"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Color de superposición",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Opacidad de superposición",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "header_height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Altura de la cabecera",
+      "default": 75,
+      "info": "Porcentaje de la altura de la pantalla que ocupará la cabecera"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "navbar_color",
+      "label": "Color de fondo de la barra de navegación",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "range",
+      "id": "navbar_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Opacidad de la barra de navegación",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "navbar_scrolled_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Opacidad de la barra al hacer scroll",
+      "default": 90,
+      "info": "La barra se volverá más opaca al hacer scroll para mejorar la legibilidad"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Color del botón",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Color del texto del botón",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Menú Móvil"
+    },
+    {
+      "type": "color",
+      "id": "mobile_menu_color",
+      "label": "Color de fondo del menú móvil",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "range",
+      "id": "mobile_menu_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Opacidad del fondo del menú",
+      "default": 100,
+      "info": "Controla la transparencia del fondo del menú móvil"
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_opacity",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Opacidad del texto del menú",
+      "default": 100,
+      "info": "Controla la opacidad del texto en el menú móvil"
+    },
+    {
+      "type": "color",
+      "id": "mobile_overlay_color",
+      "label": "Color del fondo oscuro",
+      "default": "#000000",
+      "info": "Color del fondo que aparece detrás del menú móvil"
+    },
+    {
+      "type": "range",
+      "id": "mobile_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Opacidad del fondo oscuro",
+      "default": 50,
+      "info": "Controla la transparencia del fondo detrás del menú móvil"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Imagen del carrusel",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Leyenda (opcional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Hero Header GR",
+      "category": "Header",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
 
 <style>
   .video-hero-header {
@@ -688,13 +1011,13 @@
     left: -280px;
     width: 280px;
     height: 100%;
-    background-color: {{ section.settings.navbar_color }};
     z-index: 1000;
     transition: left 0.3s ease;
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
+    background-color: {{ section.settings.mobile_menu_color | color_modify: 'alpha', section.settings.mobile_menu_opacity | divided_by: 100.0 }};
   }
 
   .mobile-menu.active {
@@ -801,16 +1124,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
+    background-color: {{ section.settings.mobile_overlay_color }};
   }
 
   .mobile-menu-overlay.active {
-    opacity: 1;
+    opacity: {{ section.settings.mobile_overlay_opacity | divided_by: 100.0 }};
     visibility: visible;
+    cursor: pointer; /* Añadir cursor pointer para indicar que es clicable */
   }
 
   @media screen and (max-width: 990px) {
@@ -1041,8 +1365,14 @@
       mobileMenuClose.addEventListener('click', closeMobileMenu);
     }
 
+    // Asegurarse de que el clic en el overlay cierre el menú
     if (mobileMenuOverlay) {
-      mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+      mobileMenuOverlay.addEventListener('click', function(e) {
+        // Asegurarse de que el clic fue directamente en el overlay y no en un elemento hijo
+        if (e.target === mobileMenuOverlay) {
+          closeMobileMenu();
+        }
+      });
     }
 
     // Cerrar el menú al hacer clic en un enlace
@@ -1052,14 +1382,26 @@
 
     // Cerrar el menú al cambiar la orientación del dispositivo
     window.addEventListener('resize', function() {
-      if (window.innerWidth > 990 && mobileMenu.classList.contains('active')) {
+      if (window.innerWidth > 990 && mobileMenu && mobileMenu.classList.contains('active')) {
         closeMobileMenu();
       }
     });
 
     // Soporte para navegación con teclado
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+      if (e.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('active')) {
+        closeMobileMenu();
+      }
+    });
+
+    // Añadir un evento de clic global para cerrar el menú al hacer clic fuera
+    document.addEventListener('click', function(e) {
+      // Si el menú está abierto y el clic no fue dentro del menú ni en el botón de abrir
+      if (mobileMenu && 
+          mobileMenu.classList.contains('active') && 
+          !mobileMenu.contains(e.target) && 
+          e.target !== mobileMenuButton &&
+          !mobileMenuButton.contains(e.target)) {
         closeMobileMenu();
       }
     });

@@ -1,0 +1,137 @@
+/* Animations for the contact form */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+  }
+}
+
+@keyframes checkmark {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+
+.contact-gr__success--animated .contact-gr__success-icon {
+  animation: checkmark 0.5s ease-in-out forwards;
+}
+
+.contact-gr__success--animated h2 {
+  animation: fadeIn 0.5s ease-in-out 0.3s forwards;
+  opacity: 0;
+}
+
+.field__input:focus,
+.text-area:focus,
+.select:focus {
+  animation: pulse 1.5s infinite;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+/* Hover effects for interactive elements */
+.field__rating-star:hover ~ .field__rating-star {
+  transform: scale(0.9);
+}
+
+.field__rating-star:hover {
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
+}
+
+.field__file-button:hover svg {
+  animation: bounce 1s ease infinite;
+}
+
+/* Input focus animations */
+.field__input:focus::placeholder,
+.text-area:focus::placeholder {
+  transform: translateX(10px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+/* Step transitions */
+.contact-gr__step-content.active {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Success message animation */
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.contact-gr__success {
+  animation: successPulse 2s ease infinite;
+}
+
+/* Button loading state */
+@keyframes buttonLoading {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.button--loading {
+  background-size: 200% 200%;
+  background-image: linear-gradient(45deg, var(--primary-color) 25%, var(--primary-color-hover) 50%, var(--primary-color) 75%);
+  animation: buttonLoading 2s ease infinite;
+  pointer-events: none;
+}
+
+/* Floating label animation */
+.field--floating .field__label {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.field--floating.field--focused .field__label,
+.field--floating.field--filled .field__label {
+  transform: translateY(-5px) scale(0.85);
+}
