@@ -118,7 +118,7 @@
       </div>
     </div>
   </div>
-  <div class="mobile-menu" style="background-color: {{ section.settings.mobile_menu_color | color_modify: 'alpha', section.settings.mobile_menu_opacity | divided_by: 100.0 }};">
+  <div class="mobile-menu">
     <div class="mobile-menu-header">
       <button class="mobile-menu-close" aria-label="Cerrar menú">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -131,7 +131,7 @@
       <ul class="mobile-nav-links">
         {% for link in section.settings.menu.links %}
           <li class="mobile-nav-item">
-            <a href="{{ link.url }}" class="mobile-nav-link {% if link.active %}active{% endif %}" style="opacity: {{ section.settings.mobile_text_opacity | divided_by: 100.0 }};">
+            <a href="{{ link.url }}" class="mobile-nav-link {% if link.active %}active{% endif %}">
               {{ link.title }}
             </a>
           </li>
@@ -140,8 +140,8 @@
     </nav>
     <div class="mobile-menu-footer">
       <form action="/search" method="get" class="mobile-search-form">
-        <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" class="mobile-search-input" style="opacity: {{ section.settings.mobile_text_opacity | divided_by: 100.0 }};">
-        <button type="submit" class="mobile-search-button" style="opacity: {{ section.settings.mobile_text_opacity | divided_by: 100.0 }};">
+        <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" class="mobile-search-input">
+        <button type="submit" class="mobile-search-button">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -1017,7 +1017,8 @@
     flex-direction: column;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-    background-color: {{ section.settings.mobile_menu_color | color_modify: 'alpha', section.settings.mobile_menu_opacity | divided_by: 100.0 }};
+    background-color: {{ section.settings.mobile_menu_color }};
+    opacity: {{ section.settings.mobile_menu_opacity | divided_by: 100.0 }};
   }
 
   .mobile-menu.active {
@@ -1158,6 +1159,10 @@
       width: 35px;
       height: 35px;
     }
+  }
+
+  .mobile-nav-link, .mobile-search-input, .mobile-search-button, .mobile-menu-close {
+    opacity: {{ section.settings.mobile_text_opacity | divided_by: 100.0 }};
   }
 </style>
 

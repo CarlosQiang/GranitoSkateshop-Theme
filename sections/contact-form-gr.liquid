@@ -31,25 +31,7 @@
 {%- endstyle -%}
 
 <div class="color-{{ section.settings.color_scheme }} gradient">
-  <div class="contact-gr page-width page-width--narrow section-{{ section.id }}-padding {% if section.settings.form_style %}contact-gr--{{ section.settings.form_style }}{% endif %} {% if section.settings.enable_animation %}contact-gr--animated{% endif %} contact-gr--{{ section.settings.color_theme | default: 'purple' }}">
-    
-    <div class="contact-gr__header">
-      <div class="contact-gr__header-bg"></div>
-      {%- if section.settings.heading != blank -%}
-        <h2 class="contact-gr__title {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-          {{ section.settings.heading }}
-        </h2>
-      {%- else -%}
-        <h2 class="visually-hidden">Formulario de contacto</h2>
-      {%- endif -%}
-
-      {%- if section.settings.description != blank -%}
-        <div class="contact-gr__description rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-          {{ section.settings.description }}
-        </div>
-      {%- endif -%}
-    </div>
-
+  <div class="contact-gr page-width page-width--narrow section-{{ section.id }}-padding {% if section.settings.form_style %}contact-gr--{{ section.settings.form_style }}{% endif %} {% if section.settings.enable_animation %}contact-gr--animated{% endif %}">
     {%- if section.settings.show_form_steps and section.blocks.size > 0 -%}
       <div class="contact-gr__steps">
         <div class="contact-gr__steps-container">
@@ -69,6 +51,20 @@
       </div>
     {%- endif -%}
 
+    {%- if section.settings.heading != blank -%}
+      <h2 class="title title-wrapper--no-top-margin inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+        {{ section.settings.heading }}
+      </h2>
+    {%- else -%}
+      <h2 class="visually-hidden">Formulario de contacto</h2>
+    {%- endif -%}
+
+    {%- if section.settings.description != blank -%}
+      <div class="contact-gr__description rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+        {{ section.settings.description }}
+      </div>
+    {%- endif -%}
+
     {%- liquid
       assign contact_form_class = 'isolate'
       if settings.animations_reveal_on_scroll
@@ -81,20 +77,41 @@
         <div class="contact-gr__success {% if section.settings.success_animation %}contact-gr__success--animated{% endif %}">
           <h2 class="form-status form-status-list form__message" tabindex="-1" autofocus>
             {%- if section.settings.custom_success_icon -%}
-              <img src="{{ section.settings.custom_success_icon | img_url: '50x' }}" alt="" class="contact-gr__success-icon">
+              <img
+                src="{{ section.settings.custom_success_icon | img_url: '50x' }}"
+                alt=""
+                class="contact-gr__success-icon"
+              >
             {%- else -%}
-              <svg class="contact-gr__success-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                class="contact-gr__success-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             {%- endif -%}
-            {{ section.settings.success_message | default: '¡Gracias por contactarnos! Te responderemos lo antes posible.' }}
+            {{
+              section.settings.success_message
+              | default: 'Gracias por contactarnos. Nos pondremos en contacto contigo lo antes posible.'
+            }}
           </h2>
         </div>
       {%- elsif form.errors -%}
         <div class="form__message">
           <h2 class="form-status caption-large text-body" role="alert" tabindex="-1" autofocus>
-            <svg class="contact-gr__error-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              class="contact-gr__error-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <circle cx="12" cy="16" r="0.5" stroke="currentColor" stroke-width="2"/>
@@ -128,11 +145,15 @@
                 name="contact[{{ section.settings.name_label | default: 'Nombre' }}]"
                 value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
                 placeholder="{{ section.settings.name_placeholder | default: 'Tu nombre' }}"
-                {% if section.settings.name_required %}required{% endif %}
+                {% if section.settings.name_required %}
+                  required
+                {% endif %}
               >
               <label class="field__label" for="ContactFormGr-name">
                 {{ section.settings.name_label | default: 'Nombre' }}
-                {%- if section.settings.name_required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                {%- if section.settings.name_required -%}
+                  <span aria-hidden="true">*</span>
+                {%- endif -%}
               </label>
               {%- if section.settings.show_help_text and section.settings.name_help_text != blank -%}
                 <div class="field__help-text">{{ section.settings.name_help_text }}</div>
@@ -194,11 +215,15 @@
                 pattern="[0-9\-\+\s$$$$]*"
                 value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
                 placeholder="{{ section.settings.phone_placeholder | default: 'Tu número de teléfono' }}"
-                {% if section.settings.phone_required %}required{% endif %}
+                {% if section.settings.phone_required %}
+                  required
+                {% endif %}
               >
               <label class="field__label" for="ContactFormGr-phone">
                 {{ section.settings.phone_label | default: 'Teléfono' }}
-                {%- if section.settings.phone_required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                {%- if section.settings.phone_required -%}
+                  <span aria-hidden="true">*</span>
+                {%- endif -%}
               </label>
               {%- if section.settings.show_help_text and section.settings.phone_help_text != blank -%}
                 <div class="field__help-text">{{ section.settings.phone_help_text }}</div>
@@ -215,11 +240,15 @@
                 name="contact[{{ section.settings.subject_label | default: 'Asunto' }}]"
                 value="{{ form.subject }}"
                 placeholder="{{ section.settings.subject_placeholder | default: '¿De qué se trata?' }}"
-                {% if section.settings.subject_required %}required{% endif %}
+                {% if section.settings.subject_required %}
+                  required
+                {% endif %}
               >
               <label class="field__label" for="ContactFormGr-subject">
                 {{ section.settings.subject_label | default: 'Asunto' }}
-                {%- if section.settings.subject_required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                {%- if section.settings.subject_required -%}
+                  <span aria-hidden="true">*</span>
+                {%- endif -%}
               </label>
               {%- if section.settings.show_help_text and section.settings.subject_help_text != blank -%}
                 <div class="field__help-text">{{ section.settings.subject_help_text }}</div>
@@ -236,11 +265,15 @@
                 name="contact[{{ section.settings.company_label | default: 'Empresa' }}]"
                 value="{{ form.company }}"
                 placeholder="{{ section.settings.company_placeholder | default: 'Nombre de tu empresa' }}"
-                {% if section.settings.company_required %}required{% endif %}
+                {% if section.settings.company_required %}
+                  required
+                {% endif %}
               >
               <label class="field__label" for="ContactFormGr-company">
                 {{ section.settings.company_label | default: 'Empresa' }}
-                {%- if section.settings.company_required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                {%- if section.settings.company_required -%}
+                  <span aria-hidden="true">*</span>
+                {%- endif -%}
               </label>
               {%- if section.settings.show_help_text and section.settings.company_help_text != blank -%}
                 <div class="field__help-text">{{ section.settings.company_help_text }}</div>
@@ -258,8 +291,8 @@
         {%- for block in section.blocks -%}
           {%- assign block_count = block_count | plus: 1 -%}
           {%- if section.settings.show_form_steps and section.settings.step_3_label != blank -%}
-            {%- assign fields_in_step_2 = section.settings.fields_in_step_2 | default: 3 -%}
-            {%- if block_count == fields_in_step_2 | plus: 1 -%}
+            {%- assign fields_in_step_2_plus_1 = section.settings.fields_in_step_2 | plus: 1 -%}
+            {%- if block_count == fields_in_step_2_plus_1 -%}
               </div>
               <div class="contact-gr__step-content" data-step-content="3">
             {%- endif -%}
@@ -267,18 +300,25 @@
 
           {%- case block.type -%}
             {%- when 'text_field' -%}
-              <div class="field{% if block.settings.required %} field--required{% endif %} {% if section.settings.enable_floating_labels %}field--floating{% endif %}" {{ block.shopify_attributes }}>
+              <div
+                class="field{% if block.settings.required %} field--required{% endif %} {% if section.settings.enable_floating_labels %}field--floating{% endif %}"
+                {{ block.shopify_attributes }}
+              >
                 <input
                   type="text"
                   id="ContactFormGr-{{ block.id }}"
                   class="field__input"
                   name="contact[{{ block.settings.label }}]"
                   placeholder="{{ block.settings.placeholder }}"
-                  {% if block.settings.required %}required{% endif %}
+                  {% if block.settings.required %}
+                    required
+                  {% endif %}
                 >
                 <label class="field__label" for="ContactFormGr-{{ block.id }}">
                   {{ block.settings.label }}
-                  {%- if block.settings.required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                  {%- if block.settings.required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif -%}
                 </label>
                 {%- if block.settings.help_text != blank and section.settings.show_help_text -%}
                   <div class="field__help-text">{{ block.settings.help_text }}</div>
@@ -286,18 +326,25 @@
               </div>
 
             {%- when 'email_field' -%}
-              <div class="field{% if block.settings.required %} field--required{% endif %} {% if section.settings.enable_floating_labels %}field--floating{% endif %}" {{ block.shopify_attributes }}>
+              <div
+                class="field{% if block.settings.required %} field--required{% endif %} {% if section.settings.enable_floating_labels %}field--floating{% endif %}"
+                {{ block.shopify_attributes }}
+              >
                 <input
                   type="email"
                   id="ContactFormGr-{{ block.id }}"
                   class="field__input"
                   name="contact[{{ block.settings.label }}]"
                   placeholder="{{ block.settings.placeholder }}"
-                  {% if block.settings.required %}required{% endif %}
+                  {% if block.settings.required %}
+                    required
+                  {% endif %}
                 >
                 <label class="field__label" for="ContactFormGr-{{ block.id }}">
                   {{ block.settings.label }}
-                  {%- if block.settings.required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                  {%- if block.settings.required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif -%}
                 </label>
                 {%- if block.settings.help_text != blank and section.settings.show_help_text -%}
                   <div class="field__help-text">{{ block.settings.help_text }}</div>
@@ -305,21 +352,34 @@
               </div>
 
             {%- when 'number_field' -%}
-              <div class="field{% if block.settings.required %} field--required{% endif %} {% if section.settings.enable_floating_labels %}field--floating{% endif %}" {{ block.shopify_attributes }}>
+              <div
+                class="field{% if block.settings.required %} field--required{% endif %} {% if section.settings.enable_floating_labels %}field--floating{% endif %}"
+                {{ block.shopify_attributes }}
+              >
                 <input
                   type="number"
                   id="ContactFormGr-{{ block.id }}"
                   class="field__input"
                   name="contact[{{ block.settings.label }}]"
                   placeholder="{{ block.settings.placeholder }}"
-                  {% if block.settings.min != blank %}min="{{ block.settings.min }}"{% endif %}
-                  {% if block.settings.max != blank %}max="{{ block.settings.max }}"{% endif %}
-                  {% if block.settings.step != blank %}step="{{ block.settings.step }}"{% endif %}
-                  {% if block.settings.required %}required{% endif %}
+                  {% if block.settings.min != blank %}
+                    min="{{ block.settings.min }}"
+                  {% endif %}
+                  {% if block.settings.max != blank %}
+                    max="{{ block.settings.max }}"
+                  {% endif %}
+                  {% if block.settings.step != blank %}
+                    step="{{ block.settings.step }}"
+                  {% endif %}
+                  {% if block.settings.required %}
+                    required
+                  {% endif %}
                 >
                 <label class="field__label" for="ContactFormGr-{{ block.id }}">
                   {{ block.settings.label }}
-                  {%- if block.settings.required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                  {%- if block.settings.required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif -%}
                 </label>
                 {%- if block.settings.help_text != blank and section.settings.show_help_text -%}
                   <div class="field__help-text">{{ block.settings.help_text }}</div>
@@ -327,19 +387,30 @@
               </div>
 
             {%- when 'date_field' -%}
-              <div class="field{% if block.settings.required %} field--required{% endif %}" {{ block.shopify_attributes }}>
+              <div
+                class="field{% if block.settings.required %} field--required{% endif %}"
+                {{ block.shopify_attributes }}
+              >
                 <label class="field__label" for="ContactFormGr-{{ block.id }}">
                   {{ block.settings.label }}
-                  {%- if block.settings.required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                  {%- if block.settings.required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif -%}
                 </label>
                 <input
                   type="date"
                   id="ContactFormGr-{{ block.id }}"
                   class="field__input field__input--date"
                   name="contact[{{ block.settings.label }}]"
-                  {% if block.settings.min_date != blank %}min="{{ block.settings.min_date }}"{% endif %}
-                  {% if block.settings.max_date != blank %}max="{{ block.settings.max_date }}"{% endif %}
-                  {% if block.settings.required %}required{% endif %}
+                  {% if block.settings.min_date != blank %}
+                    min="{{ block.settings.min_date }}"
+                  {% endif %}
+                  {% if block.settings.max_date != blank %}
+                    max="{{ block.settings.max_date }}"
+                  {% endif %}
+                  {% if block.settings.required %}
+                    required
+                  {% endif %}
                 >
                 {%- if block.settings.help_text != blank and section.settings.show_help_text -%}
                   <div class="field__help-text">{{ block.settings.help_text }}</div>
@@ -347,17 +418,24 @@
               </div>
 
             {%- when 'dropdown' -%}
-              <div class="field field--with-dropdown{% if block.settings.required %} field--required{% endif %}" {{ block.shopify_attributes }}>
+              <div
+                class="field field--with-dropdown{% if block.settings.required %} field--required{% endif %}"
+                {{ block.shopify_attributes }}
+              >
                 <label class="field__label" for="ContactFormGr-{{ block.id }}">
                   {{ block.settings.label }}
-                  {%- if block.settings.required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                  {%- if block.settings.required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif -%}
                 </label>
                 <div class="field__select-wrapper">
                   <select
                     id="ContactFormGr-{{ block.id }}"
                     class="field__input select"
                     name="contact[{{ block.settings.label }}]"
-                    {% if block.settings.required %}required{% endif %}
+                    {% if block.settings.required %}
+                      required
+                    {% endif %}
                   >
                     <option value="" disabled selected>{{ block.settings.placeholder }}</option>
                     {%- assign options = block.settings.options | split: '\n' -%}
@@ -377,18 +455,25 @@
               </div>
 
             {%- when 'checkbox' -%}
-              <div class="field field--checkbox{% if block.settings.required %} field--required{% endif %}" {{ block.shopify_attributes }}>
+              <div
+                class="field field--checkbox{% if block.settings.required %} field--required{% endif %}"
+                {{ block.shopify_attributes }}
+              >
                 <input
                   type="checkbox"
                   id="ContactFormGr-{{ block.id }}"
                   name="contact[{{ block.settings.label }}]"
                   value="Sí"
                   class="field__checkbox"
-                  {% if block.settings.required %}required{% endif %}
+                  {% if block.settings.required %}
+                    required
+                  {% endif %}
                 >
                 <label class="field__label field__label--checkbox" for="ContactFormGr-{{ block.id }}">
                   {{ block.settings.label }}
-                  {%- if block.settings.required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                  {%- if block.settings.required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif -%}
                 </label>
                 {%- if block.settings.help_text != blank and section.settings.show_help_text -%}
                   <div class="field__help-text">{{ block.settings.help_text }}</div>
@@ -396,10 +481,15 @@
               </div>
 
             {%- when 'radio' -%}
-              <fieldset class="field field--radio-group{% if block.settings.required %} field--required{% endif %}" {{ block.shopify_attributes }}>
+              <fieldset
+                class="field field--radio-group{% if block.settings.required %} field--required{% endif %}"
+                {{ block.shopify_attributes }}
+              >
                 <legend class="field__label">
                   {{ block.settings.label }}
-                  {%- if block.settings.required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                  {%- if block.settings.required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif -%}
                 </legend>
                 <div class="field__radio-wrapper">
                   {%- assign options = block.settings.options | split: '\n' -%}
@@ -411,9 +501,14 @@
                         name="contact[{{ block.settings.label }}]"
                         value="{{ option | strip }}"
                         class="field__radio"
-                        {% if forloop.first and block.settings.required %}required{% endif %}
+                        {% if forloop.first and block.settings.required %}
+                          required
+                        {% endif %}
                       >
-                      <label class="field__label field__label--radio" for="ContactFormGr-{{ block.id }}-{{ forloop.index }}">
+                      <label
+                        class="field__label field__label--radio"
+                        for="ContactFormGr-{{ block.id }}-{{ forloop.index }}"
+                      >
                         {{ option | strip }}
                       </label>
                     </div>
@@ -425,18 +520,25 @@
               </fieldset>
 
             {%- when 'textarea' -%}
-              <div class="field{% if block.settings.required %} field--required{% endif %} {% if section.settings.enable_floating_labels %}field--floating{% endif %}" {{ block.shopify_attributes }}>
+              <div
+                class="field{% if block.settings.required %} field--required{% endif %} {% if section.settings.enable_floating_labels %}field--floating{% endif %}"
+                {{ block.shopify_attributes }}
+              >
                 <textarea
                   rows="{{ block.settings.rows }}"
                   id="ContactFormGr-{{ block.id }}"
                   class="text-area field__input"
                   name="contact[{{ block.settings.label }}]"
                   placeholder="{{ block.settings.placeholder }}"
-                  {% if block.settings.required %}required{% endif %}
+                  {% if block.settings.required %}
+                    required
+                  {% endif %}
                 ></textarea>
                 <label class="form__label field__label" for="ContactFormGr-{{ block.id }}">
                   {{ block.settings.label }}
-                  {%- if block.settings.required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                  {%- if block.settings.required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif -%}
                 </label>
                 {%- if block.settings.help_text != blank and section.settings.show_help_text -%}
                   <div class="field__help-text">{{ block.settings.help_text }}</div>
@@ -444,13 +546,26 @@
               </div>
 
             {%- when 'rating' -%}
-              <div class="field field--rating{% if block.settings.required %} field--required{% endif %}" {{ block.shopify_attributes }}>
+              <div
+                class="field field--rating{% if block.settings.required %} field--required{% endif %}"
+                {{ block.shopify_attributes }}
+              >
                 <label class="field__label">
                   {{ block.settings.label }}
-                  {%- if block.settings.required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                  {%- if block.settings.required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif -%}
                 </label>
                 <div class="field__rating-stars" data-max="{{ block.settings.max_rating }}">
-                  <input type="hidden" name="contact[{{ block.settings.label }}]" id="ContactFormGr-{{ block.id }}-value" value="" {% if block.settings.required %}required{% endif %}>
+                  <input
+                    type="hidden"
+                    name="contact[{{ block.settings.label }}]"
+                    id="ContactFormGr-{{ block.id }}-value"
+                    value=""
+                    {% if block.settings.required %}
+                      required
+                    {% endif %}
+                  >
                   <div class="field__rating-container">
                     {%- for i in (1..block.settings.max_rating) -%}
                       <span class="field__rating-star" data-value="{{ i }}">
@@ -467,10 +582,15 @@
               </div>
 
             {%- when 'file_upload' -%}
-              <div class="field field--file{% if block.settings.required %} field--required{% endif %}" {{ block.shopify_attributes }}>
+              <div
+                class="field field--file{% if block.settings.required %} field--required{% endif %}"
+                {{ block.shopify_attributes }}
+              >
                 <label class="field__label" for="ContactFormGr-{{ block.id }}">
                   {{ block.settings.label }}
-                  {%- if block.settings.required -%}<span aria-hidden="true">*</span>{%- endif -%}
+                  {%- if block.settings.required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif -%}
                 </label>
                 <div class="field__file-wrapper">
                   <input
@@ -479,10 +599,14 @@
                     name="contact[{{ block.settings.label }}]"
                     class="field__file"
                     accept="{{ block.settings.accepted_file_types }}"
-                    {% if block.settings.required %}required{% endif %}
+                    {% if block.settings.required %}
+                      required
+                    {% endif %}
                   >
                   <div class="field__file-button">
-                    <span class="field__file-text">{{ block.settings.button_text | default: 'Seleccionar archivo' }}</span>
+                    <span class="field__file-text">
+                      {{- block.settings.button_text | default: 'Seleccionar archivo' -}}
+                    </span>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                       <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -506,13 +630,17 @@
               class="text-area field__input"
               name="contact[{{ section.settings.message_label | default: 'Mensaje' }}]"
               placeholder="{{ section.settings.message_placeholder | default: '¿Cómo podemos ayudarte?' }}"
-              {% if section.settings.message_required %}required{% endif %}
+              {% if section.settings.message_required %}
+                required
+              {% endif %}
             >
               {{- form.body -}}
             </textarea>
             <label class="form__label field__label" for="ContactFormGr-body">
               {{- section.settings.message_label | default: 'Mensaje' -}}
-              {%- if section.settings.message_required -%}<span aria-hidden="true">*</span>{%- endif -%}
+              {%- if section.settings.message_required -%}
+                <span aria-hidden="true">*</span>
+              {%- endif -%}
             </label>
             {%- if section.settings.show_help_text and section.settings.message_help_text != blank -%}
               <div class="field__help-text">{{ section.settings.message_help_text }}</div>
@@ -549,11 +677,15 @@
               name="contact[privacy]"
               value="accepted"
               class="field__checkbox"
-              {% if section.settings.privacy_required %}required{% endif %}
+              {% if section.settings.privacy_required %}
+                required
+              {% endif %}
             >
             <label class="field__label field__label--checkbox" for="ContactFormGr-privacy">
               {{ section.settings.privacy_text }}
-              {%- if section.settings.privacy_required -%}<span aria-hidden="true">*</span>{%- endif -%}
+              {%- if section.settings.privacy_required -%}
+                <span aria-hidden="true">*</span>
+              {%- endif -%}
             </label>
           </div>
         {%- endif -%}
@@ -583,7 +715,14 @@
           {%- if section.settings.show_form_steps -%}
             <div class="contact-gr__step-buttons">
               <button type="button" class="button button--secondary contact-gr__prev-button" style="display: none;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="contact-gr__button-icon">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="contact-gr__button-icon"
+                >
                   <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -591,7 +730,14 @@
               </button>
               <button type="button" class="button contact-gr__next-button">
                 {{ section.settings.next_button_text | default: 'Siguiente' }}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="contact-gr__button-icon">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="contact-gr__button-icon"
+                >
                   <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -601,7 +747,11 @@
               </button>
             </div>
           {%- else -%}
-            <button type="submit" class="button{% if section.settings.button_full_width %} button--full-width{% endif %}" style="{% if section.settings.button_color != blank %}background-color: {{ section.settings.button_color }};{% endif %}{% if section.settings.button_text_color != blank %}color: {{ section.settings.button_text_color }};{% endif %}">
+            <button
+              type="submit"
+              class="button{% if section.settings.button_full_width %} button--full-width{% endif %}"
+              style="{% if section.settings.button_color != blank %}background-color: {{ section.settings.button_color }};{% endif %}{% if section.settings.button_text_color != blank %}color: {{ section.settings.button_text_color }};{% endif %}"
+            >
               {{ section.settings.button_text | default: 'Enviar mensaje' }}
             </button>
           {%- endif -%}
@@ -611,8 +761,12 @@
   </div>
 </div>
 
-{%- if section.settings.show_form_steps or section.settings.enable_animation or section.blocks contains 'rating' or section.blocks contains 'file_upload' -%}
-<script>
+{%- if section.settings.show_form_steps
+  or section.settings.enable_animation
+  or section.blocks contains 'rating'
+  or section.blocks contains 'file_upload'
+-%}
+  <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Inicialización de pasos del formulario
     {% if section.settings.show_form_steps %}
@@ -776,7 +930,7 @@
     });
     {% endif %}
   });
-</script>
+  </script>
 {%- endif -%}
 
 {% schema %}
@@ -861,40 +1015,8 @@
           "label": "Con bordes"
         }
       ],
-      "default": "modern",
+      "default": "",
       "label": "Estilo del formulario"
-    },
-    {
-      "type": "select",
-      "id": "color_theme",
-      "options": [
-        {
-          "value": "purple",
-          "label": "Púrpura"
-        },
-        {
-          "value": "blue",
-          "label": "Azul"
-        },
-        {
-          "value": "green",
-          "label": "Verde"
-        },
-        {
-          "value": "pink",
-          "label": "Rosa"
-        },
-        {
-          "value": "orange",
-          "label": "Naranja"
-        },
-        {
-          "value": "dark",
-          "label": "Oscuro"
-        }
-      ],
-      "default": "purple",
-      "label": "Tema de color"
     },
     {
       "type": "checkbox",
@@ -912,7 +1034,7 @@
       "type": "checkbox",
       "id": "enable_floating_labels",
       "label": "Habilitar etiquetas flotantes",
-      "default": true
+      "default": false
     },
     {
       "type": "checkbox",
@@ -934,13 +1056,13 @@
       "step": 1,
       "unit": "px",
       "label": "Radio de esquinas",
-      "default": 12
+      "default": 8
     },
     {
       "type": "checkbox",
       "id": "add_shadow",
       "label": "Añadir sombra",
-      "default": true
+      "default": false
     },
     {
       "type": "range",
@@ -950,7 +1072,7 @@
       "step": 1,
       "unit": "px",
       "label": "Desplazamiento vertical de sombra",
-      "default": 10
+      "default": 5
     },
     {
       "type": "range",
@@ -960,7 +1082,7 @@
       "step": 1,
       "unit": "px",
       "label": "Desenfoque de sombra",
-      "default": 20
+      "default": 15
     },
     {
       "type": "range",
