@@ -26,13 +26,13 @@
 <script>
   // Script para el cambio automático de imágenes
   document.addEventListener('DOMContentLoaded', function() {
-    const productCards = document.querySelectorAll('.granito-product-card');
+    const productCards = document.querySelectorAll('.card');
     
     productCards.forEach(card => {
-      const imageContainer = card.querySelector('.granito-image-container');
+      const imageContainer = card.querySelector('.card__media');
       if (!imageContainer) return;
       
-      const images = imageContainer.querySelectorAll('.granito-product-image');
+      const images = imageContainer.querySelectorAll('.motion-image');
       if (images.length <= 1) return;
       
       let currentIndex = 0;
@@ -44,15 +44,15 @@
         images[currentIndex].classList.remove('hidden');
       }
       
-      // Iniciar el carrusel solo si hay más de una imagen
-      if (images.length > 1) {
+      // Iniciar el carrusel solo si hay más de una imagen y está activada la rotación
+      if (images.length > 1 && imageContainer.dataset.enableRotation === 'true') {
         // Ocultar todas las imágenes excepto la primera
         for (let i = 1; i < images.length; i++) {
           images[i].classList.add('hidden');
         }
         
         // Cambiar imagen cada X segundos (configurable desde el panel)
-        const interval = parseInt(card.dataset.interval) || 3000;
+        const interval = parseInt(imageContainer.dataset.interval) || 3000;
         setInterval(nextImage, interval);
       }
     });
@@ -60,17 +60,6 @@
 </script>
 
 {%- style -%}
-  /* Estilos personalizados para GRANITO SKATEBOARDING */
-  :root {
-    --granito-gold: {{ section.settings.primary_color }};
-    --granito-black: {{ section.settings.secondary_color }};
-    --granito-white: {{ section.settings.background_color }};
-    --granito-card-radius: {{ section.settings.card_radius }}px;
-    --granito-card-shadow: {{ section.settings.card_shadow_intensity }}px {{ section.settings.card_shadow_intensity | times: 1.5 }}px {{ section.settings.card_shadow_intensity | times: 2 }}px rgba(0, 0, 0, 0.1);
-    --granito-card-spacing: {{ section.settings.card_spacing }}px;
-    --granito-animation-speed: {{ section.settings.animation_speed }}ms;
-  }
-
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -83,214 +72,76 @@
     }
   }
 
-  /* Estilos específicos de GRANITO */
-  .granito-collection {
-    background-color: var(--granito-white);
+  /* Estilos para la rotación de imágenes */
+  .card__media .motion-image {
+    transition: opacity 0.3s ease;
   }
 
-  .granito-collection .title {
-    color: var(--granito-black);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .granito-collection .collection__description {
-    color: var(--granito-black);
-  }
-
-  .granito-collection .button {
-    background-color: var(--granito-gold);
-    color: var(--granito-black);
-    font-weight: 600;
-    border: none;
-    transition: opacity var(--granito-animation-speed) ease;
-  }
-
-  .granito-collection .button:hover {
-    opacity: 0.85;
-    background-color: var(--granito-gold);
-  }
-
-  .granito-collection .button--secondary {
-    background-color: var(--granito-black);
-    color: var(--granito-white);
-  }
-
-  .granito-collection .button--secondary:hover {
-    background-color: var(--granito-black);
-    opacity: 0.85;
-  }
-
-  .granito-collection .slider-button {
-    background-color: var(--granito-gold);
-    color: var(--granito-black);
-  }
-
-  .granito-collection .slider-counter {
-    color: var(--granito-black);
-  }
-
-  .granito-collection .price {
-    color: var(--granito-black);
-  }
-
-  .granito-collection .price--on-sale .price__sale {
-    color: var(--granito-gold);
-  }
-
-  /* Estilos mejorados para las tarjetas de producto */
-  .granito-collection .grid__item {
-    padding: var(--granito-card-spacing);
-  }
-
-  .granito-product-card {
-    position: relative;
-    border-radius: var(--granito-card-radius);
-    box-shadow: var(--granito-card-shadow);
-    overflow: hidden;
-    transition: transform var(--granito-animation-speed) ease, 
-                box-shadow var(--granito-animation-speed) ease;
-    background-color: var(--granito-white);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .granito-product-card:hover {
-    transform: translateY(-{{ section.settings.card_hover_lift }}px);
-    box-shadow: 0 {{ section.settings.card_shadow_intensity | times: 2 }}px {{ section.settings.card_shadow_intensity | times: 3 }}px rgba(0, 0, 0, 0.15);
-  }
-
-  .granito-image-container {
-    position: relative;
-    overflow: hidden;
-    padding-bottom: 100%; /* Relación de aspecto 1:1 por defecto */
-  }
-
-  .granito-image-container.portrait {
-    padding-bottom: 125%; /* Relación de aspecto 4:5 */
-  }
-
-  .granito-image-container.adapt {
-    padding-bottom: 0;
-  }
-
-  .granito-product-image {
+  .card__media .motion-image.hidden {
+    opacity: 0;
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: opacity var(--granito-animation-speed) ease;
   }
 
-  .granito-product-image.hidden {
+  /* Estilos para la imagen de hover */
+  .card__media .hover-image {
     opacity: 0;
-    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.3s ease;
   }
 
-  .granito-product-image.hover-image {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .granito-product-card:hover .granito-product-image.hover-image {
+  .card:hover .hover-image {
     opacity: 1;
   }
 
-  .granito-product-card:hover .granito-product-image.main-image {
+  .card:hover .main-image {
     opacity: 0;
   }
 
-  .granito-product-info {
-    padding: 15px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+  /* Ajuste de espaciado entre productos */
+  .grid--{{ section.settings.columns_desktop }}-col-desktop .grid__item {
+    padding: {{ section.settings.card_spacing }}px;
   }
 
-  .granito-product-title {
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: var(--granito-black);
-    transition: color var(--granito-animation-speed) ease;
+  /* Estilos para las tarjetas */
+  .card {
+    transition: transform {{ section.settings.animation_speed }}ms ease, 
+                box-shadow {{ section.settings.animation_speed }}ms ease;
   }
 
-  .granito-product-card:hover .granito-product-title {
-    color: var(--granito-gold);
+  .card:hover {
+    transform: translateY(-{{ section.settings.card_hover_lift }}px);
+    box-shadow: 0 {{ section.settings.card_shadow_intensity }}px {{ section.settings.card_shadow_intensity | times: 2 }}px rgba(0, 0, 0, 0.1);
   }
 
-  .granito-product-price {
-    font-weight: 700;
-    margin-top: auto;
-    color: var(--granito-black);
+  /* Colores personalizados de GRANITO */
+  .granito-collection .title {
+    color: {{ section.settings.primary_color }};
   }
 
-  .granito-product-vendor {
-    font-size: 0.85em;
-    color: rgba(0, 0, 0, 0.6);
-    margin-bottom: 8px;
+  .granito-collection .button {
+    background-color: {{ section.settings.primary_color }};
+    color: {{ section.settings.text_color }};
   }
 
-  /* Animación de entrada para las tarjetas */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .granito-collection .button:hover {
+    background-color: {{ section.settings.primary_color | color_darken: 10 }};
   }
 
-  .granito-collection .grid__item {
-    animation: fadeInUp var(--granito-animation-speed) ease forwards;
-    animation-delay: calc(var(--animation-order) * 100ms);
-    opacity: 0;
+  .granito-collection .button--secondary {
+    background-color: {{ section.settings.secondary_color }};
+    color: #ffffff;
   }
 
-  /* Estilos para el botón de vista rápida */
-  .granito-collection .quick-add__submit {
-    background-color: var(--granito-gold);
-    color: var(--granito-black);
-    border-radius: var(--granito-card-radius);
-    transition: background-color var(--granito-animation-speed) ease;
+  .granito-collection .price {
+    color: {{ section.settings.text_color }};
   }
 
-  .granito-collection .quick-add__submit:hover {
-    background-color: var(--granito-black);
-    color: var(--granito-white);
-  }
-
-  /* Etiqueta de oferta */
-  .granito-sale-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: var(--granito-gold);
-    color: var(--granito-black);
-    padding: 5px 10px;
-    border-radius: var(--granito-card-radius);
-    font-weight: 600;
-    font-size: 0.85em;
-    z-index: 2;
-  }
-
-  /* Etiqueta de agotado */
-  .granito-sold-out-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: var(--granito-black);
-    color: var(--granito-white);
-    padding: 5px 10px;
-    border-radius: var(--granito-card-radius);
-    font-weight: 600;
-    font-size: 0.85em;
-    z-index: 2;
+  .granito-collection .price--on-sale .price__sale {
+    color: {{ section.settings.primary_color }};
   }
 {%- endstyle -%}
 
@@ -314,7 +165,9 @@
   endif
 -%}
 
-<div class="granito-collection">
+<div
+  class="color-{{ section.settings.color_scheme }} isolate gradient granito-collection"
+>
   <div
     class="collection{% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %} section-{{ section.id }}-padding{% if section.settings.full_width %} collection--full-width{% endif %}"
     id="collection-{{ section.id }}"
@@ -348,137 +201,210 @@
         role="list"
         aria-label="{{ 'general.slider.name' | t }}"
       >
+        {% assign skip_card_product_styles = false %}
+
         {%- if section.settings.collection.products.size > 0 -%}
           {% paginate section.settings.collection.products by section.settings.products_to_show %}
             {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
               <li
                 id="Slide-{{ section.id }}-{{ forloop.index }}"
-                class="grid__item{% if show_mobile_slider or show_desktop_slider %} slider__slide{% endif %}"
-                style="--animation-order: {{ forloop.index }};"
+                class="grid__item{% if show_mobile_slider or show_desktop_slider %} slider__slide{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                {% if settings.animations_reveal_on_scroll %}
+                  data-cascade
+                  style="--animation-order: {{ forloop.index }};"
+                {% endif %}
               >
-                {% comment %} Tarjeta de producto personalizada GRANITO {% endcomment %}
-                <div class="granito-product-card" data-interval="{{ section.settings.image_rotation_speed | times: 1000 }}">
-                  {% if product.compare_at_price > product.price and section.settings.show_sale_badge %}
-                    <div class="granito-sale-badge">{{ 'products.product.on_sale' | t }}</div>
-                  {% endif %}
-                  
-                  {% if product.available == false and section.settings.show_sold_out_badge %}
-                    <div class="granito-sold-out-badge">{{ 'products.product.sold_out' | t }}</div>
-                  {% endif %}
-                  
-                  <a href="{{ product.url }}" class="granito-product-link">
-                    <div class="granito-image-container {% if section.settings.image_ratio == 'portrait' %}portrait{% elsif section.settings.image_ratio == 'adapt' %}adapt{% endif %}">
-                      {% if product.featured_image != blank %}
-                        <img 
-                          src="{{ product.featured_image | img_url: '500x' }}" 
-                          alt="{{ product.featured_image.alt | escape }}"
-                          class="granito-product-image main-image"
-                          loading="lazy"
-                          width="500"
-                          height="500"
-                        >
-                      {% else %}
-                        {{ 'product-1' | placeholder_svg_tag: 'granito-product-image main-image' }}
-                      {% endif %}
-                      
-                      {% comment %} Imagen para hover si está configurada {% endcomment %}
-                      {% if product.images.size > 1 and section.settings.show_hover_image %}
-                        <img 
-                          src="{{ product.images[1] | img_url: '500x' }}" 
-                          alt="{{ product.images[1].alt | escape }}"
-                          class="granito-product-image hover-image"
-                          loading="lazy"
-                          width="500"
-                          height="500"
-                        >
-                      {% endif %}
-                      
-                      {% comment %} Imágenes adicionales para rotación automática {% endcomment %}
-                      {% if section.settings.show_image_rotation and product.images.size > 1 %}
-                        {% for image in product.images offset: 1 limit: section.settings.max_rotation_images %}
-                          {% unless forloop.index == 1 and section.settings.show_hover_image %}
-                            <img 
-                              src="{{ image | img_url: '500x' }}" 
-                              alt="{{ image.alt | escape }}"
-                              class="granito-product-image hidden"
-                              loading="lazy"
-                              width="500"
-                              height="500"
-                            >
-                          {% endunless %}
-                        {% endfor %}
-                      {% endif %}
-                    </div>
-                    
-                    <div class="granito-product-info">
-                      {% if section.settings.show_vendor and product.vendor != blank %}
-                        <div class="granito-product-vendor">{{ product.vendor }}</div>
-                      {% endif %}
-                      
-                      <h3 class="granito-product-title">{{ product.title }}</h3>
-                      
-                      <div class="granito-product-price">
-                        {% if product.compare_at_price > product.price %}
-                          <span class="granito-price-sale">{{ product.price | money }}</span>
-                          <span class="granito-price-compare">{{ product.compare_at_price | money }}</span>
-                        {% else %}
-                          <span>{{ product.price | money }}</span>
-                        {% endif %}
-                      </div>
-                      
-                      {% if section.settings.show_rating and product.metafields.reviews.rating.value != blank %}
-                        <div class="granito-product-rating">
-                          {% assign rating_decimal = 0 %}
-                          {% assign decimal = product.metafields.reviews.rating.value.rating | modulo: 1 %}
-                          {% if decimal >= 0.3 and decimal <= 0.7 %}
-                            {% assign rating_decimal = 0.5 %}
-                          {% elsif decimal > 0.7 %}
-                            {% assign rating_decimal = 1 %}
-                          {% endif %}
-                          <div class="rating" role="img" aria-label="{{ 'products.product.star_reviews_info' | t: rating_value: product.metafields.reviews.rating.value, rating_max: product.metafields.reviews.rating.value.scale_max }}">
-                            {%- for i in (1..5) -%}
-                              {%- assign rating_value = product.metafields.reviews.rating.value.rating | floor -%}
-                              <span class="rating-star {% if i <= rating_value %}filled{% endif %} {% if i <= rating_value and decimal > 0 and i == rating_value %}half{% endif %}">★</span>
-                            {%- endfor -%}
+                {% comment %} Modificación para soportar rotación de imágenes y hover {% endcomment %}
+                {% capture card_product %}
+                  <div class="card-wrapper product-card-wrapper underline-links-hover">
+                    <div
+                      class="
+                        card
+                        card--{{ settings.card_style }}
+                        {% if product.featured_media %} card--media{% else %} card--text{% endif %}
+                        {% if settings.card_style == 'card' %} color-{{ settings.card_color_scheme }} gradient{% endif %}
+                        {% if product.featured_media == nil and settings.card_style == 'card' %} ratio{% endif %}
+                        {% if product.featured_media == nil and settings.card_style == 'standard' %} card--standard{% endif %}
+                        {% if settings.card_style == 'standard' %} card--standard{% endif %}
+                      "
+                      style="--ratio-percent: 100%;"
+                    >
+                      <div
+                        class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if settings.card_style == 'standard' %} ratio{% endif %}"
+                        style="--ratio-percent: 100%;"
+                      >
+                        <div class="card__media">
+                          <div class="media media--transparent media--hover-effect"
+                               data-enable-rotation="{{ section.settings.show_image_rotation }}"
+                               data-interval="{{ section.settings.image_rotation_speed | times: 1000 }}">
+                            {% if product.featured_media != blank %}
+                              <img
+                                srcset="{%- if product.featured_media.width >= 165 -%}{{ product.featured_media | image_url: width: 165 }} 165w,{%- endif -%}
+                                  {%- if product.featured_media.width >= 360 -%}{{ product.featured_media | image_url: width: 360 }} 360w,{%- endif -%}
+                                  {%- if product.featured_media.width >= 533 -%}{{ product.featured_media | image_url: width: 533 }} 533w,{%- endif -%}
+                                  {%- if product.featured_media.width >= 720 -%}{{ product.featured_media | image_url: width: 720 }} 720w,{%- endif -%}
+                                  {%- if product.featured_media.width >= 940 -%}{{ product.featured_media | image_url: width: 940 }} 940w,{%- endif -%}
+                                  {%- if product.featured_media.width >= 1066 -%}{{ product.featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+                                  {{ product.featured_media | image_url }} {{ product.featured_media.width }}w"
+                                src="{{ product.featured_media | image_url: width: 533 }}"
+                                sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+                                alt="{{ product.featured_media.alt | escape }}"
+                                class="motion-image main-image"
+                                loading="lazy"
+                                width="{{ product.featured_media.width }}"
+                                height="{{ product.featured_media.height }}"
+                              >
+                            {% else %}
+                              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg motion-image main-image' }}
+                            {% endif %}
+
+                            {% comment %} Imagen para hover si está configurada {% endcomment %}
+                            {% if product.images.size > 1 and section.settings.show_hover_image %}
+                              <img
+                                srcset="{%- if product.images[1].width >= 165 -%}{{ product.images[1] | image_url: width: 165 }} 165w,{%- endif -%}
+                                  {%- if product.images[1].width >= 360 -%}{{ product.images[1] | image_url: width: 360 }} 360w,{%- endif -%}
+                                  {%- if product.images[1].width >= 533 -%}{{ product.images[1] | image_url: width: 533 }} 533w,{%- endif -%}
+                                  {%- if product.images[1].width >= 720 -%}{{ product.images[1] | image_url: width: 720 }} 720w,{%- endif -%}
+                                  {%- if product.images[1].width >= 940 -%}{{ product.images[1] | image_url: width: 940 }} 940w,{%- endif -%}
+                                  {%- if product.images[1].width >= 1066 -%}{{ product.images[1] | image_url: width: 1066 }} 1066w,{%- endif -%}
+                                  {{ product.images[1] | image_url }} {{ product.images[1].width }}w"
+                                src="{{ product.images[1] | image_url: width: 533 }}"
+                                sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+                                alt="{{ product.images[1].alt | escape }}"
+                                class="motion-image hover-image"
+                                loading="lazy"
+                                width="{{ product.images[1].width }}"
+                                height="{{ product.images[1].height }}"
+                              >
+                            {% endif %}
+                            
+                            {% comment %} Imágenes adicionales para rotación automática {% endcomment %}
+                            {% if section.settings.show_image_rotation and product.images.size > 1 %}
+                              {% for image in product.images offset: 1 limit: section.settings.max_rotation_images %}
+                                {% unless forloop.index == 1 and section.settings.show_hover_image %}
+                                  <img
+                                    srcset="{%- if image.width >= 165 -%}{{ image | image_url: width: 165 }} 165w,{%- endif -%}
+                                        {%- if image.width >= 360 -%}{{ image | image_url: width: 360 }} 360w,{%- endif -%}
+                                        {%- if image.width >= 533 -%}{{ image | image_url: width: 533 }} 533w,{%- endif -%}
+                                        {%- if image.width >= 720 -%}{{ image | image_url: width: 720 }} 720w,{%- endif -%}
+                                        {%- if image.width >= 940 -%}{{ image | image_url: width: 940 }} 940w,{%- endif -%}
+                                        {%- if image.width >= 1066 -%}{{ image | image_url: width: 1066 }} 1066w,{%- endif -%}
+                                        {{ image | image_url }} {{ image.width }}w"
+                                    src="{{ image | image_url: width: 533 }}"
+                                    sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+                                    alt="{{ image.alt | escape }}"
+                                    class="motion-image hidden"
+                                    loading="lazy"
+                                    width="{{ image.width }}"
+                                    height="{{ image.height }}"
+                                  >
+                                {% endunless %}
+                              {% endfor %}
+                            {% endif %}
                           </div>
-                          <p class="rating-text">
-                            <span>{{ product.metafields.reviews.rating.value }} / {{ product.metafields.reviews.rating.value.scale_max }}</span>
-                          </p>
-                          <p class="rating-count">
-                            <span>({{ product.metafields.reviews.rating_count.value }} {{ 'products.product.reviews' | t }})</span>
-                          </p>
                         </div>
-                      {% endif %}
+
+                        <div class="card__content">
+                          <div class="card__information">
+                            <h3
+                              class="card__heading{% if product.featured_media or settings.card_style == 'standard' %} h5{% endif %}"
+                              {% if product.featured_media or settings.card_style == 'card' %}
+                                id="title-{{ section.id }}-{{ product.id }}"
+                              {% endif %}
+                            >
+                              <a
+                                href="{{ product.url }}"
+                                id="StandardCardNoMediaLink-{{ section.id }}-{{ product.id }}"
+                                class="full-unstyled-link"
+                                aria-labelledby="StandardCardNoMediaLink-{{ section.id }}-{{ product.id }} NoMediaStandardBadge-{{ section.id }}-{{ product.id }}"
+                              >
+                                {{ product.title | escape }}
+                              </a>
+                            </h3>
+                          </div>
+
+                          <div class="card__badge {{ settings.badge_position }}">
+                            {%- if product.available == false -%}
+                              <span
+                                id="NoMediaStandardBadge-{{ section.id }}-{{ product.id }}"
+                                class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}"
+                              >
+                                {{- 'products.product.sold_out' | t -}}
+                              </span>
+                            {%- elsif product.compare_at_price > product.price and product.available -%}
+                              <span
+                                id="NoMediaStandardBadge-{{ section.id }}-{{ product.id }}"
+                                class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
+                              >
+                                {{- 'products.product.on_sale' | t -}}
+                              </span>
+                            {%- endif -%}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="card__content">
+                        <div class="card__information">
+                          <h3
+                            class="card__heading{% if product.featured_media or settings.card_style == 'standard' %} h5{% endif %}"
+                            {% if product.featured_media or settings.card_style == 'card' %}
+                              id="title-{{ section.id }}-{{ product.id }}"
+                            {% endif %}
+                          >
+                            <a
+                              href="{{ product.url }}"
+                              id="CardLink-{{ section.id }}-{{ product.id }}"
+                              class="full-unstyled-link"
+                              aria-labelledby="CardLink-{{ section.id }}-{{ product.id }} Badge-{{ section.id }}-{{ product.id }}"
+                            >
+                              {{ product.title | escape }}
+                            </a>
+                          </h3>
+
+                          <div class="card-information">
+                            {%- if section.settings.show_vendor -%}
+                              <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
+                              <div class="caption-with-letter-spacing light">{{ product.vendor }}</div>
+                            {%- endif -%}
+
+                            <span class="caption-large light">{{ product.price | money }}</span>
+                          </div>
+                        </div>
+
+                        <div class="card__badge {{ settings.badge_position }}">
+                          {%- if product.available == false -%}
+                            <span
+                              id="Badge-{{ section.id }}-{{ product.id }}"
+                              class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}"
+                            >
+                              {{- 'products.product.sold_out' | t -}}
+                            </span>
+                          {%- elsif product.compare_at_price > product.price and product.available -%}
+                            <span
+                              id="Badge-{{ section.id }}-{{ product.id }}"
+                              class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
+                            >
+                              {{- 'products.product.on_sale' | t -}}
+                            </span>
+                          {%- endif -%}
+                        </div>
+                      </div>
                     </div>
-                  </a>
-                  
-                  {% if section.settings.quick_add != 'none' %}
-                    <div class="granito-quick-add">
-                      {%- if product.variants.size == 1 -%}
-                        <product-form>
-                          <form method="post" action="{{ routes.cart_add_url }}" id="quick-add-{{ product.id }}" accept-charset="UTF-8" class="form" enctype="multipart/form-data" novalidate="novalidate">
-                            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-                            <button type="submit" name="add" class="granito-quick-add-button">
-                              {{ 'products.product.add_to_cart' | t }}
-                            </button>
-                          </form>
-                        </product-form>
-                      {%- else -%}
-                        <a href="{{ product.url }}" class="granito-view-product-button">
-                          {{ 'products.product.view_details' | t }}
-                        </a>
-                      {%- endif -%}
-                    </div>
-                  {% endif %}
-                </div>
+                  </div>
+                {% endcapture %}
+
+                {{ card_product }}
               </li>
             {%- endfor -%}
           {% endpaginate %}
         {%- else -%}
           {%- for i in (1..section.settings.columns_desktop) -%}
             <li
-              class="grid__item"
-              style="--animation-order: {{ forloop.index }};"
+              class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+                style="--animation-order: {{ forloop.index }};"
+              {% endif %}
             >
               {% liquid
                 assign ridx = forloop.rindex
@@ -489,15 +415,13 @@
                     assign ridx = 2
                 endcase
               %}
-              <div class="granito-product-card">
-                <div class="granito-image-container">
-                  {{ 'product-' | append: ridx | placeholder_svg_tag: 'granito-product-image main-image' }}
-                </div>
-                <div class="granito-product-info">
-                  <h3 class="granito-product-title">{{ 'products.product.product_title' | t }}</h3>
-                  <div class="granito-product-price">{{ '29.99' | money }}</div>
-                </div>
-              </div>
+              {%- assign placeholder_image = 'product-apparel-' | append: ridx -%}
+              {% render 'card-product',
+                show_vendor: section.settings.show_vendor,
+                media_aspect_ratio: section.settings.image_ratio,
+                image_shape: section.settings.image_shape,
+                placeholder_image: placeholder_image
+              %}
             </li>
           {%- endfor -%}
         {%- endif -%}
@@ -537,7 +461,7 @@
     </slider-component>
 
     {%- if section.settings.show_view_all and more_in_collection -%}
-      <div class="center collection__view-all">
+      <div class="center collection__view-all{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         <a
           href="{{ section.settings.collection.url }}"
           class="{% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}"
@@ -565,7 +489,7 @@
     {
       "type": "collection",
       "id": "collection",
-      "label": "Colección"
+      "label": "t:sections.featured-collection.settings.collection.label"
     },
     {
       "type": "range",
@@ -574,11 +498,11 @@
       "max": 25,
       "step": 1,
       "default": 4,
-      "label": "Productos a mostrar"
-    },
+      "label": "t:sections.featured-collection.settings.products_to_show.label"
+    },     
     {
       "type": "header",
-      "content": "Colores y Estilos"
+      "content": "Colores y Estilos GRANITO"
     },
     {
       "type": "color",
@@ -594,56 +518,47 @@
     },
     {
       "type": "color",
-      "id": "background_color",
-      "label": "Color de fondo",
-      "default": "#FFFFFF"
+      "id": "text_color",
+      "label": "Color de texto",
+      "default": "#333333"
     },
     {
       "type": "header",
-      "content": "Estilo de Tarjetas"
-    },
-    {
-      "type": "range",
-      "id": "card_radius",
-      "min": 0,
-      "max": 20,
-      "step": 1,
-      "default": 8,
-      "label": "Radio de bordes de tarjeta"
-    },
-    {
-      "type": "range",
-      "id": "card_shadow_intensity",
-      "min": 0,
-      "max": 20,
-      "step": 1,
-      "default": 5,
-      "label": "Intensidad de sombra"
+      "content": "Configuración de Tarjetas"
     },
     {
       "type": "range",
       "id": "card_spacing",
       "min": 5,
-      "max": 50,
+      "max": 30,
       "step": 5,
-      "default": 20,
+      "default": 10,
       "label": "Espaciado entre tarjetas"
     },
     {
       "type": "range",
       "id": "card_hover_lift",
       "min": 0,
-      "max": 20,
+      "max": 10,
       "step": 1,
-      "default": 5,
+      "default": 3,
       "label": "Elevación al pasar el cursor"
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_intensity",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 3,
+      "label": "Intensidad de sombra"
     },
     {
       "type": "range",
       "id": "animation_speed",
       "min": 200,
-      "max": 1000,
-      "step": 50,
+      "max": 800,
+      "step": 100,
       "default": 300,
       "label": "Velocidad de animación (ms)"
     },
@@ -682,26 +597,14 @@
       "label": "Máximo de imágenes en rotación"
     },
     {
-      "type": "checkbox",
-      "id": "show_sale_badge",
-      "default": true,
-      "label": "Mostrar etiqueta de oferta"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_sold_out_badge",
-      "default": true,
-      "label": "Mostrar etiqueta de agotado"
-    },
-    {
       "type": "header",
-      "content": "Texto y Encabezados"
+      "content": "t:sections.featured-collection.settings.header_text.content"
     },   
     {
       "type": "inline_richtext",
       "id": "title",
       "default": "Colección GRANITO",
-      "label": "Título"
+      "label": "t:sections.featured-collection.settings.title.label"
     },
     {
       "type": "select",
@@ -709,62 +612,62 @@
       "options": [
         {
           "value": "h2",
-          "label": "Pequeño"
+          "label": "t:sections.all.heading_size.options__1.label"
         },
         {
           "value": "h1",
-          "label": "Mediano"
+          "label": "t:sections.all.heading_size.options__2.label"
         },
         {
           "value": "h0",
-          "label": "Grande"
+          "label": "t:sections.all.heading_size.options__3.label"
         },
         {
           "value": "hxl",
-          "label": "Extra grande"
+          "label": "t:sections.all.heading_size.options__4.label"
         },
         {
           "value": "hxxl",
-          "label": "Extra extra grande"
+          "label": "t:sections.all.heading_size.options__5.label"
         }
       ],
       "default": "h1",
-      "label": "Tamaño del título"
+      "label": "t:sections.all.heading_size.label"
     },
     {
       "type": "richtext",
       "id": "description",
-      "label": "Descripción"
+      "label": "t:sections.featured-collection.settings.description.label"
     },
     {
       "type": "checkbox",
       "id": "show_description",
-      "label": "Mostrar descripción de la colección",
+      "label": "t:sections.featured-collection.settings.show_description.label",
       "default": false   
     },
     {
       "type": "select",
       "id": "description_style",
-      "label": "Estilo de descripción",
+      "label": "t:sections.featured-collection.settings.description_style.label",
       "options": [
         {
           "value": "body",
-          "label": "Normal"
+          "label": "t:sections.featured-collection.settings.description_style.options__1.label"
         },
         {
           "value": "subtitle",
-          "label": "Subtítulo"
+          "label": "t:sections.featured-collection.settings.description_style.options__2.label"
         },
         {
           "value": "uppercase",
-          "label": "Mayúsculas"
+          "label": "t:sections.featured-collection.settings.description_style.options__3.label"
         }
       ],
       "default": "body"
     },
     {
       "type": "header",
-      "content": "Diseño de Colección"
+      "content": "t:sections.featured-collection.settings.header_collection.content"
     },    
     {
       "type": "range",
@@ -773,66 +676,77 @@
       "max": 6,
       "step": 1,
       "default": 4,
-      "label": "Columnas en escritorio"
+      "label": "t:sections.featured-collection.settings.columns_desktop.label"
     },
     {
       "type": "checkbox",
       "id": "enable_desktop_slider",
-      "label": "Habilitar slider en escritorio",
+      "label": "t:sections.featured-collection.settings.enable_desktop_slider.label",
       "default": false
     },
     {
       "type": "checkbox",
       "id": "full_width",
-      "label": "Ancho completo",
+      "label": "t:sections.featured-collection.settings.full_width.label",
       "default": false
     },
     {
       "type": "checkbox",
       "id": "show_view_all",
       "default": true,
-      "label": "Mostrar 'Ver todo'",
-      "info": "Muestra un botón cuando hay más productos en la colección"
+      "label": "t:sections.featured-collection.settings.show_view_all.label",
+      "info": "t:sections.featured-collection.settings.show_view_all.info"
     },
     {
       "type": "select",
       "id": "view_all_style",
-      "label": "Estilo de 'Ver todo'",
+      "label": "t:sections.featured-collection.settings.view_all_style.label",
       "options": [
         {
           "value": "link",
-          "label": "Enlace"
+          "label": "t:sections.featured-collection.settings.view_all_style.options__1.label"
         },
         {
           "value": "outline",
-          "label": "Botón con contorno"
+          "label": "t:sections.featured-collection.settings.view_all_style.options__2.label"
         },
         {
           "value": "solid",
-          "label": "Botón sólido"
+          "label": "t:sections.featured-collection.settings.view_all_style.options__3.label"
         }
       ],
       "default": "solid"
     }, 
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.featured-collection.settings.header.content"
+    },
     {
       "type": "select",
       "id": "image_ratio",
       "options": [
         {
           "value": "adapt",
-          "label": "Adaptable"
+          "label": "t:sections.featured-collection.settings.image_ratio.options__1.label"
         },
         {
           "value": "portrait",
-          "label": "Retrato"
+          "label": "t:sections.featured-collection.settings.image_ratio.options__2.label"
         },
         {
           "value": "square",
-          "label": "Cuadrado"
+          "label": "t:sections.featured-collection.settings.image_ratio.options__3.label"
         }
       ],
-      "default": "square",
-      "label": "Proporción de imagen"
+      "default": "adapt",
+      "label": "t:sections.featured-collection.settings.image_ratio.label"
     },
     {
       "type": "select",
@@ -840,96 +754,96 @@
       "options": [
         {
           "value": "default",
-          "label": "Predeterminado"
+          "label": "t:sections.all.image_shape.options__1.label"
         },
         {
           "value": "arch",
-          "label": "Arco"
+          "label": "t:sections.all.image_shape.options__2.label"
         },
         {
           "value": "blob",
-          "label": "Forma orgánica"
+          "label": "t:sections.all.image_shape.options__3.label"
         },
         {
           "value": "chevronleft",
-          "label": "Chevron izquierdo"
+          "label": "t:sections.all.image_shape.options__4.label"
         },
         {
           "value": "chevronright",
-          "label": "Chevron derecho"
+          "label": "t:sections.all.image_shape.options__5.label"
         },
         {
           "value": "diamond",
-          "label": "Diamante"
+          "label": "t:sections.all.image_shape.options__6.label"
         },
         {
           "value": "parallelogram",
-          "label": "Paralelogramo"
+          "label": "t:sections.all.image_shape.options__7.label"
         },
         {
           "value": "round",
-          "label": "Redondo"
+          "label": "t:sections.all.image_shape.options__8.label"
         }
       ],
       "default": "default",
-      "label": "Forma de imagen"
+      "label": "t:sections.all.image_shape.label"
     },
     {
       "type": "checkbox",
       "id": "show_secondary_image",
       "default": false,
-      "label": "Mostrar imagen secundaria al pasar el cursor"
+      "label": "t:sections.featured-collection.settings.show_secondary_image.label"
     },
     {
       "type": "checkbox",
       "id": "show_vendor",
       "default": false,
-      "label": "Mostrar proveedor"
+      "label": "t:sections.featured-collection.settings.show_vendor.label"
     },
     {
       "type": "checkbox",
       "id": "show_rating",
       "default": false,
-      "label": "Mostrar calificación del producto",
-      "info": "Para mostrar la calificación, añade una app de reseñas"
+      "label": "t:sections.featured-collection.settings.show_rating.label",
+      "info": "t:sections.featured-collection.settings.show_rating.info"
     },
     {
       "type": "select",
       "id": "quick_add",
       "default": "none",
-      "label": "Añadir rápido",
+      "label": "t:sections.main-collection-product-grid.settings.quick_add.label",
       "options": [
         {
           "value": "none",
-          "label": "Ninguno"
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_1"
         },
         {
           "value": "standard",
-          "label": "Estándar"
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_2"
         },
         {
           "value": "bulk",
-          "label": "Masivo"
+          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3"
         }
       ]
     },
     {
       "type": "header",
-      "content": "Móvil"
+      "content": "t:sections.featured-collection.settings.header_mobile.content"
     },
     {
       "type": "select",
       "id": "columns_mobile",
       "default": "2",
-      "label": "Columnas en móvil",
+      "label": "t:sections.featured-collection.settings.columns_mobile.label",
       "options": [
         {
           "value": "1",
-          "label": "1 columna"
+          "label": "t:sections.featured-collection.settings.columns_mobile.options__1.label"
         },
         {
           "value": "2",
-          "label": "2 columnas"
+          "label": "t:sections.featured-collection.settings.columns_mobile.options__2.label"
         }
       ]
     },    
@@ -937,11 +851,11 @@
       "type": "checkbox",
       "id": "swipe_on_mobile",
       "default": false,
-      "label": "Habilitar deslizamiento en móvil"
+      "label": "t:sections.featured-collection.settings.swipe_on_mobile.label"
     },          
     {
       "type": "header",
-      "content": "Espaciado"
+      "content": "t:sections.all.padding.section_padding_heading"
     },
     {
       "type": "range",
@@ -950,7 +864,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "label": "Espaciado superior",
+      "label": "t:sections.all.padding.padding_top",
       "default": 36
     },
     {
@@ -960,7 +874,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "label": "Espaciado inferior",
+      "label": "t:sections.all.padding.padding_bottom",
       "default": 36
     }
   ],
