@@ -1,0 +1,1367 @@
+<div class="titulo-completo-gr-container {% if section.settings.full_width %}page-width{% endif %}" id="TituloCompleto-{{ section.id }}">
+  <div class="titulo-completo-gr-wrapper"
+       style="
+         {% if section.settings.margin_top != blank %}margin-top: {{ section.settings.margin_top }}px;{% endif %}
+         {% if section.settings.margin_bottom != blank %}margin-bottom: {{ section.settings.margin_bottom }}px;{% endif %}
+         {% if section.settings.padding != blank %}padding: {{ section.settings.padding }}px;{% endif %}
+         {% if section.settings.background_type == 'color' %}
+           background-color: {{ section.settings.background_color }};
+         {% elsif section.settings.background_type == 'gradient' %}
+           background: linear-gradient(
+             {{ section.settings.gradient_direction }}deg, 
+             {{ section.settings.gradient_color_1 }} {{ section.settings.gradient_position_1 }}%, 
+             {{ section.settings.gradient_color_2 }} {{ section.settings.gradient_position_2 }}%
+           );
+         {% endif %}
+         border-radius: {{ section.settings.border_radius }}px;
+         {% if section.settings.enable_shadow %}
+           box-shadow: {{ section.settings.shadow_h_offset }}px {{ section.settings.shadow_v_offset }}px {{ section.settings.shadow_blur }}px {{ section.settings.shadow_spread }}px {{ section.settings.shadow_color }};
+         {% endif %}
+       "
+       class="{% if section.settings.enable_animation %}animate-titulo-completo{% endif %}"
+       data-animation-delay="{{ section.settings.animation_delay | times: 100 }}"
+       data-animation-duration="{{ section.settings.animation_duration | times: 100 }}"
+  >
+    <!-- Título -->
+    {% if section.settings.show_title %}
+      <{{ section.settings.title_tag }} 
+        class="titulo-completo-gr-title {% if section.settings.enable_title_text_shadow %}text-shadow{% endif %}"
+        style="
+          color: {{ section.settings.title_color }};
+          font-size: {{ section.settings.title_font_size }}px;
+          font-weight: {{ section.settings.title_font_weight }};
+          {% if section.settings.title_font_family != 'inherit' %}font-family: {{ section.settings.title_font_family }};{% endif %}
+          {% if section.settings.title_letter_spacing != blank %}letter-spacing: {{ section.settings.title_letter_spacing }}px;{% endif %}
+          {% if section.settings.title_line_height != blank %}line-height: {{ section.settings.title_line_height }};{% endif %}
+          {% if section.settings.title_text_transform != 'none' %}text-transform: {{ section.settings.title_text_transform }};{% endif %}
+          {% if section.settings.enable_title_text_shadow %}
+            text-shadow: {{ section.settings.title_shadow_h_offset }}px {{ section.settings.title_shadow_v_offset }}px {{ section.settings.title_shadow_blur }}px {{ section.settings.title_shadow_color }};
+          {% endif %}
+          {% if section.settings.title_text_decoration != 'none' %}text-decoration: {{ section.settings.title_text_decoration }};{% endif %}
+          text-align: {{ section.settings.text_alignment }};
+          margin-bottom: {{ section.settings.title_margin_bottom }}px;
+        "
+      >
+        {% if section.settings.enable_title_gradient %}
+          <span class="gradient-text" style="
+            background: linear-gradient(
+              {{ section.settings.title_gradient_direction }}deg, 
+              {{ section.settings.title_gradient_color_1 }} {{ section.settings.title_gradient_position_1 }}%, 
+              {{ section.settings.title_gradient_color_2 }} {{ section.settings.title_gradient_position_2 }}%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+          ">
+            {{ section.settings.title }}
+          </span>
+        {% else %}
+          {{ section.settings.title }}
+        {% endif %}
+      </{{ section.settings.title_tag }}>
+    {% endif %}
+
+    <!-- Subtítulo -->
+    {% if section.settings.show_subtitle %}
+      <{{ section.settings.subtitle_tag }} 
+        class="titulo-completo-gr-subtitle {% if section.settings.enable_subtitle_text_shadow %}text-shadow{% endif %}"
+        style="
+          color: {{ section.settings.subtitle_color }};
+          font-size: {{ section.settings.subtitle_font_size }}px;
+          font-weight: {{ section.settings.subtitle_font_weight }};
+          {% if section.settings.subtitle_font_family != 'inherit' %}font-family: {{ section.settings.subtitle_font_family }};{% endif %}
+          {% if section.settings.subtitle_letter_spacing != blank %}letter-spacing: {{ section.settings.subtitle_letter_spacing }}px;{% endif %}
+          {% if section.settings.subtitle_line_height != blank %}line-height: {{ section.settings.subtitle_line_height }};{% endif %}
+          {% if section.settings.subtitle_text_transform != 'none' %}text-transform: {{ section.settings.subtitle_text_transform }};{% endif %}
+          {% if section.settings.enable_subtitle_text_shadow %}
+            text-shadow: {{ section.settings.subtitle_shadow_h_offset }}px {{ section.settings.subtitle_shadow_v_offset }}px {{ section.settings.subtitle_shadow_blur }}px {{ section.settings.subtitle_shadow_color }};
+          {% endif %}
+          {% if section.settings.subtitle_text_decoration != 'none' %}text-decoration: {{ section.settings.subtitle_text_decoration }};{% endif %}
+          text-align: {{ section.settings.text_alignment }};
+          margin-bottom: {{ section.settings.subtitle_margin_bottom }}px;
+        "
+      >
+        {% if section.settings.enable_subtitle_gradient %}
+          <span class="gradient-text" style="
+            background: linear-gradient(
+              {{ section.settings.subtitle_gradient_direction }}deg, 
+              {{ section.settings.subtitle_gradient_color_1 }} {{ section.settings.subtitle_gradient_position_1 }}%, 
+              {{ section.settings.subtitle_gradient_color_2 }} {{ section.settings.subtitle_gradient_position_2 }}%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+          ">
+            {{ section.settings.subtitle }}
+          </span>
+        {% else %}
+          {{ section.settings.subtitle }}
+        {% endif %}
+      </{{ section.settings.subtitle_tag }}>
+    {% endif %}
+
+    <!-- Descripción -->
+    {% if section.settings.show_description %}
+      <{{ section.settings.description_tag }} 
+        class="titulo-completo-gr-description {% if section.settings.enable_description_text_shadow %}text-shadow{% endif %}"
+        style="
+          color: {{ section.settings.description_color }};
+          font-size: {{ section.settings.description_font_size }}px;
+          font-weight: {{ section.settings.description_font_weight }};
+          {% if section.settings.description_font_family != 'inherit' %}font-family: {{ section.settings.description_font_family }};{% endif %}
+          {% if section.settings.description_letter_spacing != blank %}letter-spacing: {{ section.settings.description_letter_spacing }}px;{% endif %}
+          {% if section.settings.description_line_height != blank %}line-height: {{ section.settings.description_line_height }};{% endif %}
+          {% if section.settings.description_text_transform != 'none' %}text-transform: {{ section.settings.description_text_transform }};{% endif %}
+          {% if section.settings.enable_description_text_shadow %}
+            text-shadow: {{ section.settings.description_shadow_h_offset }}px {{ section.settings.description_shadow_v_offset }}px {{ section.settings.description_shadow_blur }}px {{ section.settings.description_shadow_color }};
+          {% endif %}
+          {% if section.settings.description_text_decoration != 'none' %}text-decoration: {{ section.settings.description_text_decoration }};{% endif %}
+          text-align: {{ section.settings.text_alignment }};
+        "
+      >
+        {% if section.settings.enable_description_gradient %}
+          <span class="gradient-text" style="
+            background: linear-gradient(
+              {{ section.settings.description_gradient_direction }}deg, 
+              {{ section.settings.description_gradient_color_1 }} {{ section.settings.description_gradient_position_1 }}%, 
+              {{ section.settings.description_gradient_color_2 }} {{ section.settings.description_gradient_position_2 }}%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+          ">
+            {{ section.settings.description }}
+          </span>
+        {% else %}
+          {% if section.settings.enable_richtext %}
+            {{ section.settings.description_richtext }}
+          {% else %}
+            {{ section.settings.description }}
+          {% endif %}
+        {% endif %}
+      </{{ section.settings.description_tag }}>
+    {% endif %}
+  </div>
+</div>
+
+{% if section.settings.enable_animation %}
+<style>
+.animate-titulo-completo {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity {{ section.settings.animation_duration | times: 0.1 }}s ease-out, transform {{ section.settings.animation_duration | times: 0.1 }}s ease-out;
+}
+
+.animate-titulo-completo.animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+  .animate-titulo-completo {
+    opacity: 1;
+    transform: translateY(0);
+    transition: none;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const tituloCompletoElement = document.querySelector('#TituloCompleto-{{ section.id }} .animate-titulo-completo');
+  const animationDelay = parseInt(tituloCompletoElement.getAttribute('data-animation-delay'));
+  
+  function handleIntersection(entries, observer) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('animated');
+        }, animationDelay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }
+  
+  const observer = new IntersectionObserver(handleIntersection, {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  });
+  
+  observer.observe(tituloCompletoElement);
+});
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Título Completo GR",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Configuración General"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Alineación de texto",
+      "options": [
+        {
+          "value": "left",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "right",
+          "label": "Derecha"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Ancho completo",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Título"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Mostrar título",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Texto del título",
+      "default": "Título principal"
+    },
+    {
+      "type": "select",
+      "id": "title_tag",
+      "label": "Etiqueta HTML",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        },
+        {
+          "value": "p",
+          "label": "Párrafo"
+        },
+        {
+          "value": "div",
+          "label": "Div"
+        }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color del título",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 12,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de fuente",
+      "default": 42
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Grosor de fuente",
+      "options": [
+        {
+          "value": "300",
+          "label": "Ligero"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medio"
+        },
+        {
+          "value": "600",
+          "label": "Semi-negrita"
+        },
+        {
+          "value": "700",
+          "label": "Negrita"
+        },
+        {
+          "value": "800",
+          "label": "Extra-negrita"
+        },
+        {
+          "value": "900",
+          "label": "Negro"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "title_font_family",
+      "label": "Familia de fuente",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Tema predeterminado"
+        },
+        {
+          "value": "Arial, sans-serif",
+          "label": "Arial"
+        },
+        {
+          "value": "Helvetica, sans-serif",
+          "label": "Helvetica"
+        },
+        {
+          "value": "Times New Roman, serif",
+          "label": "Times New Roman"
+        },
+        {
+          "value": "Georgia, serif",
+          "label": "Georgia"
+        },
+        {
+          "value": "Verdana, sans-serif",
+          "label": "Verdana"
+        },
+        {
+          "value": "Courier New, monospace",
+          "label": "Courier New"
+        },
+        {
+          "value": "Trebuchet MS, sans-serif",
+          "label": "Trebuchet MS"
+        }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "min": -5,
+      "max": 20,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Espaciado entre letras",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "title_line_height",
+      "min": 0.8,
+      "max": 3,
+      "step": 0.1,
+      "label": "Altura de línea",
+      "default": 1.2
+    },
+    {
+      "type": "select",
+      "id": "title_text_transform",
+      "label": "Transformación de texto",
+      "options": [
+        {
+          "value": "none",
+          "label": "Ninguna"
+        },
+        {
+          "value": "uppercase",
+          "label": "MAYÚSCULAS"
+        },
+        {
+          "value": "lowercase",
+          "label": "minúsculas"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalizar Cada Palabra"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "title_text_decoration",
+      "label": "Decoración de texto",
+      "options": [
+        {
+          "value": "none",
+          "label": "Ninguna"
+        },
+        {
+          "value": "underline",
+          "label": "Subrayado"
+        },
+        {
+          "value": "line-through",
+          "label": "Tachado"
+        },
+        {
+          "value": "overline",
+          "label": "Línea superior"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Margen inferior",
+      "default": 15
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_title_gradient",
+      "label": "Habilitar texto con degradado",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "title_gradient_direction",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "unit": "°",
+      "label": "Dirección del degradado",
+      "default": 90
+    },
+    {
+      "type": "color",
+      "id": "title_gradient_color_1",
+      "label": "Color 1",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "range",
+      "id": "title_gradient_position_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 1",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "title_gradient_color_2",
+      "label": "Color 2",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_gradient_position_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 2",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_title_text_shadow",
+      "label": "Habilitar sombra de texto",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "title_shadow_h_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento horizontal",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "title_shadow_v_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento vertical",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "title_shadow_blur",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desenfoque",
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "title_shadow_color",
+      "label": "Color de sombra",
+      "default": "rgba(0,0,0,0.3)"
+    },
+    {
+      "type": "header",
+      "content": "Subtítulo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subtitle",
+      "label": "Mostrar subtítulo",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Texto del subtítulo",
+      "default": "Subtítulo personalizable"
+    },
+    {
+      "type": "select",
+      "id": "subtitle_tag",
+      "label": "Etiqueta HTML",
+      "options": [
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        },
+        {
+          "value": "p",
+          "label": "Párrafo"
+        },
+        {
+          "value": "div",
+          "label": "Div"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Color del subtítulo",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size",
+      "min": 12,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de fuente",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "subtitle_font_weight",
+      "label": "Grosor de fuente",
+      "options": [
+        {
+          "value": "300",
+          "label": "Ligero"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medio"
+        },
+        {
+          "value": "600",
+          "label": "Semi-negrita"
+        },
+        {
+          "value": "700",
+          "label": "Negrita"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "select",
+      "id": "subtitle_font_family",
+      "label": "Familia de fuente",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Tema predeterminado"
+        },
+        {
+          "value": "Arial, sans-serif",
+          "label": "Arial"
+        },
+        {
+          "value": "Helvetica, sans-serif",
+          "label": "Helvetica"
+        },
+        {
+          "value": "Times New Roman, serif",
+          "label": "Times New Roman"
+        },
+        {
+          "value": "Georgia, serif",
+          "label": "Georgia"
+        },
+        {
+          "value": "Verdana, sans-serif",
+          "label": "Verdana"
+        },
+        {
+          "value": "Courier New, monospace",
+          "label": "Courier New"
+        },
+        {
+          "value": "Trebuchet MS, sans-serif",
+          "label": "Trebuchet MS"
+        }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_letter_spacing",
+      "min": -5,
+      "max": 20,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Espaciado entre letras",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "subtitle_line_height",
+      "min": 0.8,
+      "max": 3,
+      "step": 0.1,
+      "label": "Altura de línea",
+      "default": 1.3
+    },
+    {
+      "type": "select",
+      "id": "subtitle_text_transform",
+      "label": "Transformación de texto",
+      "options": [
+        {
+          "value": "none",
+          "label": "Ninguna"
+        },
+        {
+          "value": "uppercase",
+          "label": "MAYÚSCULAS"
+        },
+        {
+          "value": "lowercase",
+          "label": "minúsculas"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalizar Cada Palabra"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "subtitle_text_decoration",
+      "label": "Decoración de texto",
+      "options": [
+        {
+          "value": "none",
+          "label": "Ninguna"
+        },
+        {
+          "value": "underline",
+          "label": "Subrayado"
+        },
+        {
+          "value": "line-through",
+          "label": "Tachado"
+        },
+        {
+          "value": "overline",
+          "label": "Línea superior"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_margin_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Margen inferior",
+      "default": 15
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_subtitle_gradient",
+      "label": "Habilitar texto con degradado",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "subtitle_gradient_direction",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "unit": "°",
+      "label": "Dirección del degradado",
+      "default": 90
+    },
+    {
+      "type": "color",
+      "id": "subtitle_gradient_color_1",
+      "label": "Color 1",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_gradient_position_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 1",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "subtitle_gradient_color_2",
+      "label": "Color 2",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_gradient_position_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 2",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_subtitle_text_shadow",
+      "label": "Habilitar sombra de texto",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "subtitle_shadow_h_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento horizontal",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "subtitle_shadow_v_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento vertical",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "subtitle_shadow_blur",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desenfoque",
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "subtitle_shadow_color",
+      "label": "Color de sombra",
+      "default": "rgba(0,0,0,0.3)"
+    },
+    {
+      "type": "header",
+      "content": "Descripción"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Mostrar descripción",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_richtext",
+      "label": "Habilitar texto enriquecido",
+      "default": true,
+      "info": "Permite usar formato como negrita, cursiva, etc."
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Descripción (texto simple)",
+      "default": "Añade aquí tu descripción. Este texto se puede personalizar completamente."
+    },
+    {
+      "type": "richtext",
+      "id": "description_richtext",
+      "label": "Descripción (texto enriquecido)",
+      "default": "<p>Añade aquí tu descripción. Este texto se puede <strong>personalizar</strong> completamente con <em>formato</em> enriquecido.</p>"
+    },
+    {
+      "type": "select",
+      "id": "description_tag",
+      "label": "Etiqueta HTML",
+      "options": [
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        },
+        {
+          "value": "p",
+          "label": "Párrafo"
+        },
+        {
+          "value": "div",
+          "label": "Div"
+        }
+      ],
+      "default": "p"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color de la descripción",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "min": 12,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de fuente",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "description_font_weight",
+      "label": "Grosor de fuente",
+      "options": [
+        {
+          "value": "300",
+          "label": "Ligero"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medio"
+        },
+        {
+          "value": "600",
+          "label": "Semi-negrita"
+        },
+        {
+          "value": "700",
+          "label": "Negrita"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "description_font_family",
+      "label": "Familia de fuente",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Tema predeterminado"
+        },
+        {
+          "value": "Arial, sans-serif",
+          "label": "Arial"
+        },
+        {
+          "value": "Helvetica, sans-serif",
+          "label": "Helvetica"
+        },
+        {
+          "value": "Times New Roman, serif",
+          "label": "Times New Roman"
+        },
+        {
+          "value": "Georgia, serif",
+          "label": "Georgia"
+        },
+        {
+          "value": "Verdana, sans-serif",
+          "label": "Verdana"
+        },
+        {
+          "value": "Courier New, monospace",
+          "label": "Courier New"
+        },
+        {
+          "value": "Trebuchet MS, sans-serif",
+          "label": "Trebuchet MS"
+        }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "description_letter_spacing",
+      "min": -2,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Espaciado entre letras",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "description_line_height",
+      "min": 1,
+      "max": 3,
+      "step": 0.1,
+      "label": "Altura de línea",
+      "default": 1.6
+    },
+    {
+      "type": "select",
+      "id": "description_text_transform",
+      "label": "Transformación de texto",
+      "options": [
+        {
+          "value": "none",
+          "label": "Ninguna"
+        },
+        {
+          "value": "uppercase",
+          "label": "MAYÚSCULAS"
+        },
+        {
+          "value": "lowercase",
+          "label": "minúsculas"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalizar Cada Palabra"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "description_text_decoration",
+      "label": "Decoración de texto",
+      "options": [
+        {
+          "value": "none",
+          "label": "Ninguna"
+        },
+        {
+          "value": "underline",
+          "label": "Subrayado"
+        },
+        {
+          "value": "line-through",
+          "label": "Tachado"
+        },
+        {
+          "value": "overline",
+          "label": "Línea superior"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_description_gradient",
+      "label": "Habilitar texto con degradado",
+      "default": false,
+      "info": "No compatible con texto enriquecido"
+    },
+    {
+      "type": "range",
+      "id": "description_gradient_direction",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "unit": "°",
+      "label": "Dirección del degradado",
+      "default": 90
+    },
+    {
+      "type": "color",
+      "id": "description_gradient_color_1",
+      "label": "Color 1",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "range",
+      "id": "description_gradient_position_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 1",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "description_gradient_color_2",
+      "label": "Color 2",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "description_gradient_position_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 2",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_description_text_shadow",
+      "label": "Habilitar sombra de texto",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "description_shadow_h_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento horizontal",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "description_shadow_v_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento vertical",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "description_shadow_blur",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desenfoque",
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "description_shadow_color",
+      "label": "Color de sombra",
+      "default": "rgba(0,0,0,0.3)"
+    },
+    {
+      "type": "header",
+      "content": "Fondo"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Tipo de fondo",
+      "options": [
+        {
+          "value": "none",
+          "label": "Ninguno"
+        },
+        {
+          "value": "color",
+          "label": "Color sólido"
+        },
+        {
+          "value": "gradient",
+          "label": "Degradado"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "range",
+      "id": "gradient_direction",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "unit": "°",
+      "label": "Dirección del degradado",
+      "default": 90
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Color 1 del degradado",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "range",
+      "id": "gradient_position_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 1",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "Color 2 del degradado",
+      "default": "#f1f1f1"
+    },
+    {
+      "type": "range",
+      "id": "gradient_position_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 2",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Espaciado y bordes"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margen superior",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margen inferior",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Relleno",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Radio de borde",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Sombra del contenedor"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_shadow",
+      "label": "Habilitar sombra",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "shadow_h_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento horizontal",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "shadow_v_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento vertical",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "shadow_blur",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Desenfoque",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "shadow_spread",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Expansión",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "shadow_color",
+      "label": "Color de sombra",
+      "default": "rgba(0,0,0,0.1)"
+    },
+    {
+      "type": "header",
+      "content": "Animación"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Habilitar animación",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "min": 0,
+      "max": 10,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Retraso de animación",
+      "default": 0.2
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 1,
+      "max": 10,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Duración de animación",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Título Completo GR",
+      "category": "Texto"
+    }
+  ]
+}
+{% endschema %}
+

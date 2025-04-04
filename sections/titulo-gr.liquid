@@ -1,0 +1,671 @@
+<div class="titulo-gr-container {% if section.settings.full_width %}page-width{% endif %}" id="Titulo-{{ section.id }}">
+  <div class="titulo-gr-wrapper"
+       style="
+         {% if section.settings.margin_top != blank %}margin-top: {{ section.settings.margin_top }}px;{% endif %}
+         {% if section.settings.margin_bottom != blank %}margin-bottom: {{ section.settings.margin_bottom }}px;{% endif %}
+         {% if section.settings.padding != blank %}padding: {{ section.settings.padding }}px;{% endif %}
+         {% if section.settings.text_alignment != blank %}text-align: {{ section.settings.text_alignment }};{% endif %}
+         {% if section.settings.background_type == 'color' %}
+           background-color: {{ section.settings.background_color }};
+         {% elsif section.settings.background_type == 'gradient' %}
+           background: linear-gradient(
+             {{ section.settings.gradient_direction }}deg, 
+             {{ section.settings.gradient_color_1 }} {{ section.settings.gradient_position_1 }}%, 
+             {{ section.settings.gradient_color_2 }} {{ section.settings.gradient_position_2 }}%
+           );
+         {% endif %}
+         border-radius: {{ section.settings.border_radius }}px;
+         {% if section.settings.enable_shadow %}
+           box-shadow: {{ section.settings.shadow_h_offset }}px {{ section.settings.shadow_v_offset }}px {{ section.settings.shadow_blur }}px {{ section.settings.shadow_spread }}px {{ section.settings.shadow_color }};
+         {% endif %}
+       "
+       class="{% if section.settings.enable_animation %}animate-titulo{% endif %}"
+       data-animation-delay="{{ section.settings.animation_delay | times: 100 }}"
+       data-animation-duration="{{ section.settings.animation_duration | times: 100 }}"
+  >
+    <{{ section.settings.heading_tag }} 
+      class="titulo-gr-heading {% if section.settings.enable_text_shadow %}text-shadow{% endif %}"
+      style="
+        color: {{ section.settings.text_color }};
+        font-size: {{ section.settings.font_size }}px;
+        font-weight: {{ section.settings.font_weight }};
+        {% if section.settings.font_family != 'inherit' %}font-family: {{ section.settings.font_family }};{% endif %}
+        {% if section.settings.letter_spacing != blank %}letter-spacing: {{ section.settings.letter_spacing }}px;{% endif %}
+        {% if section.settings.line_height != blank %}line-height: {{ section.settings.line_height }};{% endif %}
+        {% if section.settings.text_transform != 'none' %}text-transform: {{ section.settings.text_transform }};{% endif %}
+        {% if section.settings.enable_text_shadow %}
+          text-shadow: {{ section.settings.text_shadow_h_offset }}px {{ section.settings.text_shadow_v_offset }}px {{ section.settings.text_shadow_blur }}px {{ section.settings.text_shadow_color }};
+        {% endif %}
+        {% if section.settings.text_decoration != 'none' %}text-decoration: {{ section.settings.text_decoration }};{% endif %}
+      "
+    >
+      {% if section.settings.enable_gradient_text %}
+        <span class="gradient-text" style="
+          background: linear-gradient(
+            {{ section.settings.text_gradient_direction }}deg, 
+            {{ section.settings.text_gradient_color_1 }} {{ section.settings.text_gradient_position_1 }}%, 
+            {{ section.settings.text_gradient_color_2 }} {{ section.settings.text_gradient_position_2 }}%
+          );
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-fill-color: transparent;
+        ">
+          {{ section.settings.title }}
+        </span>
+      {% else %}
+        {{ section.settings.title }}
+      {% endif %}
+    </{{ section.settings.heading_tag }}>
+  </div>
+</div>
+
+{% if section.settings.enable_animation %}
+<style>
+.animate-titulo {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity {{ section.settings.animation_duration | times: 0.1 }}s ease-out, transform {{ section.settings.animation_duration | times: 0.1 }}s ease-out;
+}
+
+.animate-titulo.animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+  .animate-titulo {
+    opacity: 1;
+    transform: translateY(0);
+    transition: none;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const tituloElement = document.querySelector('#Titulo-{{ section.id }} .animate-titulo');
+  const animationDelay = parseInt(tituloElement.getAttribute('data-animation-delay'));
+  
+  function handleIntersection(entries, observer) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('animated');
+        }, animationDelay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }
+  
+  const observer = new IntersectionObserver(handleIntersection, {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  });
+  
+  observer.observe(tituloElement);
+});
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Título GR",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contenido"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Título personalizable"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Etiqueta HTML",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        },
+        {
+          "value": "p",
+          "label": "Párrafo"
+        },
+        {
+          "value": "div",
+          "label": "Div"
+        }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "header",
+      "content": "Estilo de texto"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de fuente",
+      "default": 42
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Grosor de fuente",
+      "options": [
+        {
+          "value": "300",
+          "label": "Ligero"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medio"
+        },
+        {
+          "value": "600",
+          "label": "Semi-negrita"
+        },
+        {
+          "value": "700",
+          "label": "Negrita"
+        },
+        {
+          "value": "800",
+          "label": "Extra-negrita"
+        },
+        {
+          "value": "900",
+          "label": "Negro"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "font_family",
+      "label": "Familia de fuente",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Tema predeterminado"
+        },
+        {
+          "value": "Arial, sans-serif",
+          "label": "Arial"
+        },
+        {
+          "value": "Helvetica, sans-serif",
+          "label": "Helvetica"
+        },
+        {
+          "value": "Times New Roman, serif",
+          "label": "Times New Roman"
+        },
+        {
+          "value": "Georgia, serif",
+          "label": "Georgia"
+        },
+        {
+          "value": "Verdana, sans-serif",
+          "label": "Verdana"
+        },
+        {
+          "value": "Courier New, monospace",
+          "label": "Courier New"
+        },
+        {
+          "value": "Trebuchet MS, sans-serif",
+          "label": "Trebuchet MS"
+        }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "min": -5,
+      "max": 20,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Espaciado entre letras",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "line_height",
+      "min": 0.8,
+      "max": 3,
+      "step": 0.1,
+      "label": "Altura de línea",
+      "default": 1.2
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Transformación de texto",
+      "options": [
+        {
+          "value": "none",
+          "label": "Ninguna"
+        },
+        {
+          "value": "uppercase",
+          "label": "MAYÚSCULAS"
+        },
+        {
+          "value": "lowercase",
+          "label": "minúsculas"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalizar Cada Palabra"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "text_decoration",
+      "label": "Decoración de texto",
+      "options": [
+        {
+          "value": "none",
+          "label": "Ninguna"
+        },
+        {
+          "value": "underline",
+          "label": "Subrayado"
+        },
+        {
+          "value": "line-through",
+          "label": "Tachado"
+        },
+        {
+          "value": "overline",
+          "label": "Línea superior"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Alineación",
+      "options": [
+        {
+          "value": "left",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "right",
+          "label": "Derecha"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Texto con degradado"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_gradient_text",
+      "label": "Habilitar texto con degradado",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "text_gradient_direction",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "unit": "°",
+      "label": "Dirección del degradado",
+      "default": 90,
+      "info": "0° = de abajo hacia arriba, 90° = de izquierda a derecha"
+    },
+    {
+      "type": "color",
+      "id": "text_gradient_color_1",
+      "label": "Color 1",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "range",
+      "id": "text_gradient_position_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 1",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "text_gradient_color_2",
+      "label": "Color 2",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "text_gradient_position_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 2",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Sombra de texto"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_text_shadow",
+      "label": "Habilitar sombra de texto",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "text_shadow_h_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento horizontal",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "text_shadow_v_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento vertical",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "text_shadow_blur",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desenfoque",
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "text_shadow_color",
+      "label": "Color de sombra",
+      "default": "rgba(0,0,0,0.3)"
+    },
+    {
+      "type": "header",
+      "content": "Fondo"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Tipo de fondo",
+      "options": [
+        {
+          "value": "none",
+          "label": "Ninguno"
+        },
+        {
+          "value": "color",
+          "label": "Color sólido"
+        },
+        {
+          "value": "gradient",
+          "label": "Degradado"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "range",
+      "id": "gradient_direction",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "unit": "°",
+      "label": "Dirección del degradado",
+      "default": 90
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Color 1 del degradado",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "range",
+      "id": "gradient_position_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 1",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "Color 2 del degradado",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "gradient_position_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Posición del color 2",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Espaciado y bordes"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margen superior",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margen inferior",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Relleno",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Radio de borde",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Sombra del contenedor"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_shadow",
+      "label": "Habilitar sombra",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "shadow_h_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento horizontal",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "shadow_v_offset",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desplazamiento vertical",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "shadow_blur",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Desenfoque",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "shadow_spread",
+      "min": -20,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Expansión",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "shadow_color",
+      "label": "Color de sombra",
+      "default": "rgba(0,0,0,0.1)"
+    },
+    {
+      "type": "header",
+      "content": "Animación"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Habilitar animación",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "animation_delay",
+      "min": 0,
+      "max": 10,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Retraso de animación",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "min": 1,
+      "max": 10,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Duración de animación",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Diseño"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Ancho completo",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Título GR",
+      "category": "Texto"
+    }
+  ]
+}
+{% endschema %}
+
