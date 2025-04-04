@@ -11,32 +11,9 @@
   "name": "t:sections.header.name",
   "type": "header",
   "sections": {
-    "announcement-bar": {
-      "type": "announcement-bar",
-      "blocks": {
-        "announcement-bar-0": {
-          "type": "announcement",
-          "settings": {
-            "text": "Welcome to our store",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "announcement-bar-0"
-      ],
-      "settings": {
-        "auto_rotate": false,
-        "change_slides_speed": 5,
-        "color_scheme": "scheme-1",
-        "show_line_separator": true,
-        "show_social": false,
-        "enable_country_selector": false,
-        "enable_language_selector": false
-      }
-    },
     "header": {
       "type": "header",
+      "disabled": true,
       "settings": {
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
@@ -53,10 +30,69 @@
         "padding_top": 20,
         "padding_bottom": 20
       }
+    },
+    "video_hero_header_gr_brPAai": {
+      "type": "video-hero-header-gr",
+      "blocks": {
+        "slide_AbGRpU": {
+          "type": "slide",
+          "settings": {
+            "caption": ""
+          }
+        },
+        "slide_AyeTCi": {
+          "type": "slide",
+          "settings": {
+            "caption": ""
+          }
+        },
+        "slide_FrJfNF": {
+          "type": "slide",
+          "settings": {
+            "caption": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_AbGRpU",
+        "slide_AyeTCi",
+        "slide_FrJfNF"
+      ],
+      "settings": {
+        "logo": "shopify://shop_images/LOGO_GRANITO_SKATEBOARDING_BLACK_SIN_FONDO.png",
+        "site_name": "Mi Tienda",
+        "menu": "main-menu",
+        "search_placeholder": "Buscar",
+        "heading": "Bienvenidos a nuestra tienda",
+        "subheading": "Encuentra los mejores productos para ti",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "arrow",
+        "background_type": "video",
+        "video_url": "",
+        "show_carousel_indicators": true,
+        "show_carousel_controls": true,
+        "carousel_speed": 5,
+        "carousel_transition": "fade",
+        "overlay_color": "#000000",
+        "overlay_opacity": 30,
+        "header_height": 75,
+        "navbar_color": "#D4AF37",
+        "navbar_opacity": 70,
+        "navbar_scrolled_opacity": 90,
+        "text_color": "#121212",
+        "button_color": "#D4AF37",
+        "button_text_color": "#FFFFFF",
+        "mobile_menu_color": "#D4AF37",
+        "mobile_menu_opacity": 100,
+        "mobile_text_opacity": 100,
+        "mobile_overlay_color": "#000000",
+        "mobile_overlay_opacity": 50
+      }
     }
   },
   "order": [
-    "announcement-bar",
-    "header"
+    "header",
+    "video_hero_header_gr_brPAai"
   ]
 }
