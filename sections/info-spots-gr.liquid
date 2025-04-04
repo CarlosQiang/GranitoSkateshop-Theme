@@ -265,6 +265,7 @@
                    margin-bottom: {{ section.settings.map_margin_bottom }}px;
                    border-radius: {{ section.settings.map_border_radius }}px;
                    overflow: hidden;
+                   max-height: {{ section.settings.map_max_height }}px;
                    {% if section.settings.enable_map_shadow %}
                      box-shadow: {{ section.settings.map_shadow_h_offset }}px {{ section.settings.map_shadow_v_offset }}px {{ section.settings.map_shadow_blur }}px {{ section.settings.map_shadow_spread }}px {{ section.settings.map_shadow_color }};
                    {% endif %}
@@ -457,6 +458,7 @@
 .info-spots-gr-map-container {
   width: 100%;
   position: relative;
+  max-height: {{ section.settings.map_max_height }}px;
 }
 
 .info-spots-gr-map {
@@ -465,6 +467,7 @@
   height: 0;
   padding-bottom: {{ section.settings.map_aspect_ratio }}%;
   overflow: hidden;
+  max-height: {{ section.settings.map_max_height }}px;
 }
 
 .info-spots-gr-map iframe {
@@ -474,6 +477,7 @@
   width: 100%;
   height: 100%;
   border: 0;
+  max-height: {{ section.settings.map_max_height }}px;
 }
 
 /* Estilos para textos con degradado */
@@ -505,6 +509,12 @@
     width: 8px;
     height: 8px;
   }
+  
+  .info-spots-gr-map-container,
+  .info-spots-gr-map,
+  .info-spots-gr-map iframe {
+    max-height: {{ section.settings.map_max_height_mobile | default: section.settings.map_max_height }}px;
+  }
 }
 </style>
 
@@ -527,6 +537,7 @@ document.addEventListener('DOMContentLoaded', function() {
       iframe.style.top = '0';
       iframe.style.left = '0';
       iframe.style.border = '0';
+      iframe.style.maxHeight = '{{ section.settings.map_max_height }}px';
     }
   }
 });
@@ -650,7 +661,6 @@ function initCarousel(carousel) {
   startCarousel();
 }
 </script>
-
 {% schema %}
 {
   "name": "Info Spots GR",
@@ -1651,7 +1661,6 @@ function initCarousel(carousel) {
       "type": "select",
       "id": "description_font_size",
       "label": "Tamaño de fuente",
-      "default": "16",
       "options": [
         {
           "value": "12",
@@ -1673,7 +1682,8 @@ function initCarousel(carousel) {
           "value": "20",
           "label": "20px"
         }
-      ]
+      ],
+      "default": "16"
     },
     {
       "type": "select",
@@ -2168,6 +2178,26 @@ function initCarousel(carousel) {
     },
     {
       "type": "range",
+      "id": "map_max_height",
+      "min": 200,
+      "max": 600,
+      "step": 50,
+      "unit": "px",
+      "label": "Altura máxima del mapa",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "map_max_height_mobile",
+      "min": 150,
+      "max": 500,
+      "step": 50,
+      "unit": "px",
+      "label": "Altura máxima del mapa (móvil)",
+      "default": 300
+    },
+    {
+      "type": "range",
       "id": "map_margin_top",
       "min": 0,
       "max": 50,
@@ -2280,5 +2310,4 @@ function initCarousel(carousel) {
     }
   ]
 }
-
 {% endschema %}
